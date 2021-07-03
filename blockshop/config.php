@@ -87,6 +87,8 @@ for ($i = 0, $size = $siz1; $i < $size; ++$i) {
     $cats .= '<option value="' . $i . '">' . $cat[$i] . '</option>';
 }
 
+require_once 'db_connection.php';
+
 ///определяем переменные пользователя///
 $username = isset($_SESSION['shopname']) ? $_SESSION['shopname'] : null;
 

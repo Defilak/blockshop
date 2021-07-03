@@ -1,10 +1,13 @@
 <?php
+if (!defined('BLOCKSHOP')) {
+    die;
+}
 
-///подключение к mysql///
-require_once "../lib/class.simpleDB.php";
-require_once "../lib/class.simpleMysqli.php";
+// Подключение к mysqli
+require_once 'lib/class.simpleDB.php';
+require_once 'lib/class.simpleMysqli.php';
 
-$conn = array(
+$mysqli_settings = array(
     'server' => $mysql_host,
     'username' => $mysql_user,
     'password' => $mysql_pass,
@@ -13,4 +16,4 @@ $conn = array(
     'charset' => $charset,
 );
 
-$db = new simpleMysqli($conn);
+$db = new simpleMysqli($mysqli_settings);
