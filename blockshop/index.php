@@ -1,7 +1,8 @@
 <?php
 
 define('BLOCKSHOP', true);
-header("Content-type: text/html; charset=UTF-8");
+
+global $c;
 
 include('config.php');
 
@@ -55,15 +56,18 @@ if (isset($_POST['login']) and isset($_POST['pass'])) {
 }
 if (empty($_SESSION['shopname'])) {
     $head = '';
-    die($head . str_replace(array('{name}', '{info}'), array('Авторизируйтесь', '<center><form method="post">Логин<br><input type="text" name="login" value=""><br>Пароль<br><input type="password" name="pass"><br><input type="submit" value="Вход"></form></center>'), $lkblock));
+    die($head . str_replace(array('{name}', '{info}'), array('Авторизируйтесь', $_template_auth), $lkblock));
 }
 
 $head = '';
 $add = '';
 $userv = '';
 
+require_once 'router.php';
+
+
 ///шапка магазина///
-if (!isset($_POST['shop']) and !isset($_POST['lk']) and !isset($_POST['banlist'])) {
+if (!is_route('shop') and !is_route('lk') and !is_route('banlist')) {
 
     echo '<script>var url1 = \'/' . $dir . 'ajaxbuy.php\';var url2 = \'/' . $dir . 'index.php\'; var url3 = \'/' . $dir . '\';</script><link rel="stylesheet" type="text/css" href="/' . $dir . 'shop.css" /><script type="text/javascript" src="/' . $dir . 'shop.js"></script>';
     if ($group == 15)
@@ -91,7 +95,7 @@ if (isset($_POST['lk'])) {
     }
 
     ///узнаем группу и вычисляем дату окончания///
-    $pex = $ex->select("SELECT value from permissions where name='{$username}' and permission='group-{$grp[0]}-until'");
+    $pex = $db->select("SELECT value from permissions where name='{$username}' and permission='group-{$grp[0]}-until'");
 
     if ($username === 'defi') {
         $group = 15;
@@ -177,8 +181,8 @@ if (isset($_POST['banlist'])) {
 
 function banlist($s1)
 {
-    global $banlist, $ex, $s;
-    $q = $ex->select("SELECT * FROM `" . $banlist . "_" . $s[$s1] . "`");
+    global $banlist, $db, $s, $c;
+    $q = $db->select("SELECT * FROM `" . $banlist . "_" . $s[$s1] . "`");
     $c .= '                
 <table class="banlist_table">
     <tr>
@@ -220,8 +224,7 @@ if (isset($_POST['shop']) & isset($_POST['banlist'])) {
 
 function shop($s1)
 {
-
-    global $s, $cat, $ex, $dir, $blocks, $group, $shopdesign, $sklrub, $skleco, $badly, $icons;
+    global $s, $cat, $db, $dir, $blocks, $group, $shopdesign, $sklrub, $skleco, $badly, $icons, $c, $username, $cats, $servdesign, $userv, $headdesign;
     list($srv, $ct) = explode(":", $s1);
 
     if (ctype_digit($srv) and isset($s[$srv])) {
@@ -236,7 +239,7 @@ function shop($s1)
         $category = '%%%%';
     }
 
-    $q = $ex->select("SELECT * FROM {$blocks} WHERE server='{$serv}' and category LIKE '{$category}' ORDER BY id");
+    $q = $db->select("SELECT * FROM {$blocks} WHERE server='{$serv}' and category LIKE '{$category}' ORDER BY id");
 
     if (count($q) == 0) {
         $c .= str_replace('{msg}', 'В данной категории не найдено товара!', $badly);
@@ -258,6 +261,7 @@ function shop($s1)
         $replace = array($q[$i]['id'], $q[$i]['info'], $s2, $q[$i]['name'], $dir, $q[$i]['image'], $s3, $q[$i]['amount'], $icons);
         $c .= str_replace($search, $replace, $shopdesign);
     }
+    
     $srv = str_replace(array('{name}', '{srv}', '{cats}'), array($username, $serv, $cats), $servdesign);
     $head = str_replace(array('{servdesign}', '{user}'), array($srv, $userv), $headdesign);
 

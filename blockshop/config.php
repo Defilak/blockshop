@@ -86,32 +86,19 @@ for ($i = 0, $size = $siz; $i < $size; ++$i) {
 for ($i = 0, $size = $siz1; $i < $size; ++$i) {
     $cats .= '<option value="' . $i . '">' . $cat[$i] . '</option>';
 }
-///подключение к mysql///
-require_once "lib/class.simpleDB.php";
-require_once "lib/class.simpleMysqli.php";
-
-$conn = array(
-    'server' => $mysql_host,
-    'username' => $mysql_user,
-    'password' => $mysql_pass,
-    'db' => $mysql_db,
-    'port' => '3306',
-    'charset' => $charset,
-);
-$ex = new simpleMysqli($conn);
 
 ///определяем переменные пользователя///
 $username = isset($_SESSION['shopname']) ? $_SESSION['shopname'] : null;
 
 if ($username) {
     //SELECT * FROM `iConomy` WHERE `username`='defi';1
-    $q1 = $ex->select("SELECT * FROM `{$eco[0]}` WHERE `{$eco[1]}`='{$username}';");
+    $q1 = $db->select("SELECT * FROM `{$eco[0]}` WHERE `{$eco[1]}`='{$username}';");
 
     if (count($q1) == 0) {
         //INSERT INTO `iConomy` (id,`username`,`balance`) VALUES (NULL, 'defi','0');
-        $ex->insert("INSERT INTO `{$eco[0]}` (id,`{$eco[1]}`,`{$eco[2]}`) VALUES (NULL, '{$username}','{$nominal}');");
+        $db->insert("INSERT INTO `{$eco[0]}` (id,`{$eco[1]}`,`{$eco[2]}`) VALUES (NULL, '{$username}','{$nominal}');");
         //SELECT * FROM `iconomy` WHERE `username`='defi';
-        $q1 = $ex->select("SELECT * FROM `{$eco[0]}` WHERE `{$eco[1]}`='{$username}';");
+        $q1 = $db->select("SELECT * FROM `{$eco[0]}` WHERE `{$eco[1]}`='{$username}';");
     }
 
     $money = $q1[0][$eco[3]];
@@ -119,7 +106,7 @@ if ($username) {
     $group = $q1[0]['group'];
     $bancount = $q1[0]['bancount'];
     $buys = $q1[0]['buys'];
-    $q2 = $ex->select("select * from {$banlist} where name='{$username}'");
+    $q2 = $db->select("select * from {$banlist} where name='{$username}'");
 
     if (count($q2) == 1) {
         $ban = 1;

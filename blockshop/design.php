@@ -1,5 +1,9 @@
 <?php
 
+
+$_template_auth = '<center><form method="post">Логин<br><input type="text" name="login" value=""><br>Пароль<br><input type="password" name="pass"><br><input type="submit" value="Вход"></form></center>';
+
+
 /*Переменные в дизайнах
 {msg}-переменная сообщения
 {name}-название услуги, блока или игрока

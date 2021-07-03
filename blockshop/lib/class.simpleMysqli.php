@@ -106,8 +106,8 @@ class simpleMysqli extends simpleDB
         $this->query($arguments);
         if (!$this->stmp) return false;
 
-        $execute = $this->stmp->execute();
-        if (!$execute) return false;
+        $dbecute = $this->stmp->execute();
+        if (!$dbecute) return false;
 
         $result = $this->bindResult($data);
         if (!$result) return false;
@@ -152,8 +152,8 @@ class simpleMysqli extends simpleDB
         $this->query($arguments);
         if (!$this->stmp) return false;
 
-        $execute = $this->stmp->execute();
-        if (!$execute) return false;
+        $dbecute = $this->stmp->execute();
+        if (!$dbecute) return false;
         $this->setQueryInfo();
         return true;
     }

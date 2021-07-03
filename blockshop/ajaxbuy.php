@@ -70,13 +70,13 @@ if ($count == 1 and $group != '-1') {
 ///покупка предмета
 function buyblock($s1)
 {
-    global $blocks, $money, $iconomy, $cart, $logs, $username, $sklrub, $skleco, $ex, $buys;
+    global $blocks, $money, $iconomy, $cart, $logs, $username, $sklrub, $skleco, $db, $buys;
     list($s1, $s2, $ss, $s3) = explode("::", $s1);
     $s3 = ifuser($s3);
     if (!ctype_digit($s2) or $s2 == '0' or $s2 > 128 or !preg_match("|^[\d]+$|", $s1)) {
         badly("Неверно введено количество предметов!<br>Допустимые значения от 1 до 128 шт!");
     }
-    $r = $ex->select("SELECT * FROM {$blocks} WHERE id='{$s1}';"); ///не волнуйтесь, запрос безопасен///
+    $r = $db->select("SELECT * FROM {$blocks} WHERE id='{$s1}';"); ///не волнуйтесь, запрос безопасен///
     if (count($r) == 0) {
         badly("Данный блок отсутствует в продаже!");
     }
@@ -128,11 +128,11 @@ function buyblock($s1)
     inbdlog($info);
     upbalance($username, "-" . $price, $pl);
     upprop($username, 'buys=buys+1');
-    $q1 = $ex->select("SELECT * from `{$r[0]['server']}` where `{$cart['1']}`='{$s3}' and `{$cart['2']}`='{$r[0]['block_id']}'");
+    $q1 = $db->select("SELECT * from `{$r[0]['server']}` where `{$cart['1']}`='{$s3}' and `{$cart['2']}`='{$r[0]['block_id']}'");
     if (count($q1) == 1) {
-        $ex->update("UPDATE `{$r[0]['server']}` set `{$cart['3']}`= `{$cart['3']}` + {$amount}, price=price+{$backprice} where `{$cart['1']}`='{$s3}' and name='{$r[0]['name']}'");
+        $db->update("UPDATE `{$r[0]['server']}` set `{$cart['3']}`= `{$cart['3']}` + {$amount}, price=price+{$backprice} where `{$cart['1']}`='{$s3}' and name='{$r[0]['name']}'");
     } else {
-        $ex->insert("INSERT INTO `{$r[0]['server']}`(id,`{$cart['1']}`,`{$cart['2']}`,`{$cart['3']}`, img, name, price) VALUES (NULL, '{$s3}','{$r[0]['block_id']}','{$amount}', '{$r[0]['image']}', '{$r[0]['name']}','{$backprice}');");
+        $db->insert("INSERT INTO `{$r[0]['server']}`(id,`{$cart['1']}`,`{$cart['2']}`,`{$cart['3']}`, img, name, price) VALUES (NULL, '{$s3}','{$r[0]['block_id']}','{$amount}', '{$r[0]['image']}', '{$r[0]['name']}','{$backprice}');");
     }
     uptime(10);
     inlog('log.txt', " Куплен предмет <b>\"{$r[0]['name']}\"</b>{$add}. Количество: <b>{$skl3}</b>. Цена: <b>{$skl1}</b>");
@@ -142,7 +142,7 @@ function buyblock($s1)
 ///покупка/продление статусов///
 function donate($s1)
 {
-    global $username, $group, $money, $sklrub, $donate, $logs, $time, $ex;
+    global $username, $group, $money, $sklrub, $donate, $logs, $time, $db;
     if (!isset($donate[$s1])) {
         badly("Данный статус не существует!");
     }
@@ -153,11 +153,11 @@ function donate($s1)
     ///отключение///
     if ($price == 0) {
         list($n, $p, $a) = explode(":", $donate[$group]);
-        $q = $ex->select("SELECT value from permissions where name='{$username}'");
+        $q = $db->select("SELECT value from permissions where name='{$username}'");
         $tm = ($q[0]['value'] - $time) / 86400;
-        $ex->delete("DELETE from permissions where name='{$username}'");
-        $ex->delete("DELETE from permissions_inheritance where child='{$username}'");
-        $ex->delete("DELETE from permissions_entity where name='{$username}'");
+        $db->delete("DELETE from permissions where name='{$username}'");
+        $db->delete("DELETE from permissions_inheritance where child='{$username}'");
+        $db->delete("DELETE from permissions_entity where name='{$username}'");
         $price = $p / 30 * $tm / 2;
         $rub = skl($price, $sklrub);
         upgroup($username, $s1);
@@ -176,7 +176,7 @@ function donate($s1)
     upgroup($username, $s1);
     ///продление///
     if ($group == $s1) {
-        $ex->update("UPDATE permissions set value=value+{$time1}, permission='group-{$name}-until' where name='{$username}'");
+        $db->update("UPDATE permissions set value=value+{$time1}, permission='group-{$name}-until' where name='{$username}'");
         $s2 = skl(($price / 100 * 70), $sklrub);
         inlog('log.txt', "Продлен статус {$name}");
         upbalance($username, "-" . round($price / 100 * 70), 1);
@@ -198,11 +198,11 @@ function donate($s1)
 ///склад////
 function cart($s1)
 {
-    global $cart, $dir, $cartdesign, $s, $ex, $goodly, $icons;
+    global $cart, $dir, $cartdesign, $s, $db, $goodly, $icons;
     $m .= infly('Здесь отображается список вещей, которые вы можете забрать в игре.<br> Для получения вещей в игре используйте команду: <b>/cart</b>');
     $siz = count($s);
     for ($i = 0, $size = $siz; $i < $size; ++$i) {
-        $q = $ex->select("SELECT * FROM `{$s[$i]}` WHERE `{$cart['1']}`='{$s1}'");
+        $q = $db->select("SELECT * FROM `{$s[$i]}` WHERE `{$cart['1']}`='{$s1}'");
         $search = array('{id}', '{name}', '{dir}', '{img}', '{amount}', '{srv}', '{icons}');
         for ($u = 0; $u < count($q); $u++) {
             $replace = array($q[$u]['id'], $q[$u]['name'], $dir, $q[$u]['img'], $q[$u][$cart['3']], $s[$i], $icons);
@@ -218,9 +218,9 @@ function cart($s1)
 ///история///
 function history($s1)
 {
-    global $dir, $logs, $historydesign, $ex, $goodly, $icons;
+    global $dir, $logs, $historydesign, $db, $goodly, $icons;
     $m .= infly('Здесь отображаются все совершенные вами действия в магазине за ближайшие 10 суток.');
-    $q = $ex->select("SELECT * FROM {$logs} WHERE name='{$s1}' ORDER BY date DESC");
+    $q = $db->select("SELECT * FROM {$logs} WHERE name='{$s1}' ORDER BY date DESC");
     $time = time() - 864000;
     if (count($q) == 0) {
         badly('История пуста!');
@@ -237,7 +237,7 @@ function history($s1)
         $replace = array($n, $dir, $l, $g, $d, $icons);
         $c .= str_replace($search, $replace, $historydesign);
     }
-    $ex->delete("DELETE from {$logs} where date<{$time}");
+    $db->delete("DELETE from {$logs} where date<{$time}");
     die($m . $c);
 }
 
@@ -318,7 +318,7 @@ function toeco($s1)
 ///разбан///
 function unban()
 {
-    global $money, $group, $bans, $banlist, $username, $bancount, $sklrub, $ex;
+    global $money, $group, $bans, $banlist, $username, $bancount, $sklrub, $db;
     if ($bancount == count($bans)) {
         badly("Кол-во разбанов исчерпано!");
     }
@@ -331,7 +331,7 @@ function unban()
     upbalance($username, "-" . $price, 1);
     $info = "Разбан №{$count}:n:-{$skl}:n:0:n:264.png";
     inbdlog($info);
-    $ex->delete("DELETE from {$banlist} where name='{$username}'");
+    $db->delete("DELETE from {$banlist} where name='{$username}'");
     upprop($username, 'bancount=' . $count . ',buys=0');
     inlog('admin.txt', "Купил {$count} разбан");
     uptime(20);
@@ -355,18 +355,18 @@ function balance($s1)
 ///возврат покупки///
 function back($ss)
 {
-    global $username, $group, $cart, $skleco, $s, $ex;
+    global $username, $group, $cart, $skleco, $s, $db;
     list($s1, $s2) = explode(":", $ss);
     if (!ctype_digit($s1) or !in_array($s2, $s)) {
         badly("Некорректные данные!");
     }
-    $q = $ex->select("SELECT price from `{$s2}` where id='{$s1}' and `{$cart['1']}`='{$username}'");
+    $q = $db->select("SELECT price from `{$s2}` where id='{$s1}' and `{$cart['1']}`='{$username}'");
     if (count($q) != 1) {
         badly("Указанный блок не найден!");
     }
     $backprice = $q[0]['price'];
     $skl = skl($backprice, $skleco);
-    $ex->delete("DELETE from `{$s2}` where id='{$s1}' and `{$cart['1']}`='{$username}'");
+    $db->delete("DELETE from `{$s2}` where id='{$s1}' and `{$cart['1']}`='{$username}'");
     $info = "Возврат с корзины:n:+{$skl}:n:0:n:264.png";
     inbdlog($info);
     upbalance($username, "+" . $backprice, 0);
@@ -377,13 +377,13 @@ function back($ss)
 ///добавление префикса и суффикса///
 function prefix($s1)
 {
-    global $username, $ex;
+    global $username, $db;
     list($color, $prefix, $nick, $suffix) = explode(":", $s1);
     if (!preg_match("|^([0-9\a-f]{1,1})$|is", $color) or !preg_match("|^([0-9\a-z]{1,10})$|is", $prefix) or !preg_match("|^([0-9\a-f]{1,1})$|is", $nick) or !preg_match("|^([0-9\a-f]{1,1})$|is", $suffix)) {
         badly("Некорректный префикс или суффикс!");
     }
     $info = '&' . $color . '[' . $prefix . ']&' . $nick;
-    $ex->update("UPDATE permissions_entity set prefix='{$info}',suffix='&{$suffix}' where name='{$username}'");
+    $db->update("UPDATE permissions_entity set prefix='{$info}',suffix='&{$suffix}' where name='{$username}'");
     goodly("Ваш префикс и суффикс успешно изменен!");
 }
 
@@ -547,11 +547,11 @@ if (isset($_FILES['skin'])) {
 ////Администраторские функции////
 function setstatus($s1)
 {
-    global $donate, $sklrub, $group, $username, $ex;
+    global $donate, $sklrub, $group, $username, $db;
     list($id, $name) = explode(":", $s1);
     if ($id == 'ban') {
         $time = time();
-        $ex->insert("INSERT into banlist (name,reason,admin,time,temptime,id) values ('{$name}','Забанен админом','{$username}','{$time}','0',NULL)");
+        $db->insert("INSERT into banlist (name,reason,admin,time,temptime,id) values ('{$name}','Забанен админом','{$username}','{$time}','0',NULL)");
         goodly("Игрок <b>{$name}</b> забанен!");
     }
     $name = ifuser($name);
@@ -559,12 +559,12 @@ function setstatus($s1)
         badly("Данная группа не существует!");
     }
     list($n, $p, $d) = explode(':', $donate[$id]);
-    $ex->delete("DELETE from banlist where name='{$name}'");
+    $db->delete("DELETE from banlist where name='{$name}'");
     upgroup($name, $id);
     if ($id == 0) {
-        $ex->delete("DELETE from permissions where name='{$name}'");
-        $ex->delete("DELETE from permissions_inheritance where child='{$name}'");
-        $ex->delete("DELETE from permissions_entity where name='{$name}'");
+        $db->delete("DELETE from permissions where name='{$name}'");
+        $db->delete("DELETE from permissions_inheritance where child='{$name}'");
+        $db->delete("DELETE from permissions_entity where name='{$name}'");
     } else {
         pex($name, $n, (time() + 1000000));
     }
@@ -574,7 +574,7 @@ function setstatus($s1)
 
 function addmoney($s1)
 {
-    global $real, $eco, $ex;
+    global $real, $eco, $db;
     list($type, $summ, $name) = explode(":", $s1);
     $name = ifuser($name);
     if (!ctype_digit($summ)) {
@@ -585,22 +585,22 @@ function addmoney($s1)
     } else {
         $type = 2;
     }
-    $ex->update("UPDATE `{$eco['0']}` set `{$eco[$type]}`='{$summ}' where `{$eco['1']}`='{$name}'");
+    $db->update("UPDATE `{$eco['0']}` set `{$eco[$type]}`='{$summ}' where `{$eco['1']}`='{$name}'");
     inlog('admin.txt', "Игроку {$name} дано {$summ} {$eco[$type]}");
     goodly("Валюта установлена игроку <b>{$name}</b>!");
 }
 
 function edituser($s1)
 {
-    global $dir, $real, $eco, $donate, $edituserhead, $edituserbody, $ex;
+    global $dir, $real, $eco, $donate, $edituserhead, $edituserbody, $db;
     ///список статусов///
     for ($i = 0, $size = count($donate); $i < $size; ++$i) {
         list($s2, $s3, $s3) = explode(":", $donate[$i]);
         $s .= '<option value="' . $i . '">' . $s2 . '</option>';
     }
-    $q = $ex->select("SELECT * from `{$eco['0']}` where `{$eco['1']}` LIKE '{$s1}%%%%' LIMIT 0,50");
+    $q = $db->select("SELECT * from `{$eco['0']}` where `{$eco['1']}` LIKE '{$s1}%%%%' LIMIT 0,50");
     ///создаем массив забаненных///
-    $w = $ex->select("SELECT * from banlist");
+    $w = $db->select("SELECT * from banlist");
     for ($i = 0; $i < count($q); $i++) {
         $arr[] .= $w[0]['name'];
     }
@@ -624,7 +624,7 @@ function edituser($s1)
 
 function edit($s1)
 {
-    global $blocks, $s, $cat, $ex;
+    global $blocks, $s, $cat, $db;
     list($image, $blockid, $name, $amount, $price, $realprice, $server, $action, $mid, $category, $ench) = explode("::", $s1);
     if (
         !ctype_digit($price) or !ctype_digit($realprice) or !ctype_digit($mid) or !ctype_digit($action) or $action < 0 or $action > 99 or !ctype_digit($amount) or $amount < 1 or !isset($s[$server]) or !isset($cat[$category]) or
@@ -633,11 +633,11 @@ function edit($s1)
         badly("В полях ввода обнаружены запрещенные символы!");
     }
     if ($mid != 0) {
-        $ex->update("UPDATE {$blocks} SET image='{$image}', block_id='{$blockid}', amount='{$amount}', price='{$price}', realprice='{$realprice}', name='{$name}', action='{$action}', server='{$s[$server]}', category='{$cat[$category]}', info='{$ench}' WHERE id='{$mid}';");
+        $db->update("UPDATE {$blocks} SET image='{$image}', block_id='{$blockid}', amount='{$amount}', price='{$price}', realprice='{$realprice}', name='{$name}', action='{$action}', server='{$s[$server]}', category='{$cat[$category]}', info='{$ench}' WHERE id='{$mid}';");
         inlog('admin.txt', "Отредактирован блок под id: {$blockid}");
         goodly("Вы успешно отредактировали блок под ID: " . $blockid);
     } else {
-        $ex->insert("INSERT INTO {$blocks}(id,image,block_id,amount,price,realprice,name,action,server,category,info) VALUES (NULL, '{$image}', '{$blockid}', '{$amount}', '{$price}', '{$realprice}', '{$name}', '{$action}', '{$s[$server]}', '{$cat[$category]}','{$ench}');");
+        $db->insert("INSERT INTO {$blocks}(id,image,block_id,amount,price,realprice,name,action,server,category,info) VALUES (NULL, '{$image}', '{$blockid}', '{$amount}', '{$price}', '{$realprice}', '{$name}', '{$action}', '{$s[$server]}', '{$cat[$category]}','{$ench}');");
         inlog('admin.txt', "Добавлен блок под id: {$blockid}");
         goodly("Вы успешно добавили блок под ID: " . $blockid);
     }
@@ -645,7 +645,7 @@ function edit($s1)
 
 function admin($s1)
 {
-    global $dir, $blocks, $admlist, $admbox, $admcont, $ex, $asd, $icons;
+    global $dir, $blocks, $admlist, $admbox, $admcont, $db, $asd, $icons;
     if (!ctype_digit($s1)) {
         badly("Неверно заполнено одно из полей!");
     }
@@ -659,7 +659,7 @@ function admin($s1)
     $serv = servlist();
     $cats = catlist();
     if ($s1 != 0) {
-        $q = $ex->select("SELECT * FROM {$blocks} where id='{$s1}'");
+        $q = $db->select("SELECT * FROM {$blocks} where id='{$s1}'");
         $f1 = str_replace(array('{dir}', '{img}', '{icons}'), array($dir, $q[0]['image'], $icons), $admbox);
         $f2 = $q[0]['block_id'];
         $f3 = $q[0]['name'];
@@ -686,11 +686,11 @@ function admin($s1)
 
 function delblock($s1)
 {
-    global $blocks, $ex;
+    global $blocks, $db;
     if (!ctype_digit($s1)) {
         badly("Обнаружены некорректные символы!");
     }
-    $ex->delete("DELETE FROM {$blocks} WHERE id='{$s1}';");
+    $db->delete("DELETE FROM {$blocks} WHERE id='{$s1}';");
     inlog('admin.txt', "Удален блок под id: {$s1}");
     goodly("Блок успешно удален!");
 }
@@ -698,11 +698,11 @@ function delblock($s1)
 ///побочные функции///
 function ifuser($s1)
 {
-    global $eco, $username, $ex;
+    global $eco, $username, $db;
     if (empty($s1)) {
         return $username;
     }
-    $q = $ex->select("SELECT `{$eco['1']}` from `{$eco['0']}` where `{$eco['1']}`='{$s1}'");
+    $q = $db->select("SELECT `{$eco['1']}` from `{$eco['0']}` where `{$eco['1']}`='{$s1}'");
     if (count($q) == 1) {
         return $s1;
     } else {
@@ -712,33 +712,33 @@ function ifuser($s1)
 
 function upbalance($s1, $s2, $s3)
 {
-    global $eco, $ex;
+    global $eco, $db;
     if ($s3 == 1) {
         $s3 = $eco['3'];
     } else {
         $s3 = $eco['2'];
     }
-    $ex->update("UPDATE `{$eco['0']}` set {$s3}={$s3}{$s2} where `{$eco['1']}`='{$s1}'");
+    $db->update("UPDATE `{$eco['0']}` set {$s3}={$s3}{$s2} where `{$eco['1']}`='{$s1}'");
 }
 
 function upgroup($s1, $s2)
 {
-    global $eco, $ex;
-    $ex->update("UPDATE `{$eco['0']}` set `group`='{$s2}' where `{$eco['1']}`='{$s1}'");
+    global $eco, $db;
+    $db->update("UPDATE `{$eco['0']}` set `group`='{$s2}' where `{$eco['1']}`='{$s1}'");
 }
 
 function upprop($s1, $s2)
 {
-    global $eco, $ex;
-    $ex->update("UPDATE `{$eco['0']}` set {$s2} where `{$eco['1']}`='{$s1}'");
+    global $eco, $db;
+    $db->update("UPDATE `{$eco['0']}` set {$s2} where `{$eco['1']}`='{$s1}'");
 }
 
 function pex($s1, $s2, $s3)
 {
-    global $ex;
-    $ex->insert("INSERT INTO permissions (id, name, type, permission, world, value) VALUES (NULL, '{$s1}', '1', 'group-{$s2}-until', '', '{$s3}')");
-    $ex->insert("INSERT INTO permissions_inheritance (id, child, parent, type, world) VALUES (NULL, '{$s1}', '{$s2}', '1', NULL)");
-    $ex->insert("INSERT INTO permissions_entity (id, name, type, prefix, suffix) VALUES (NULL, '{$s1}','1', '&2[{$s2}]', '&f')");
+    global $db;
+    $db->insert("INSERT INTO permissions (id, name, type, permission, world, value) VALUES (NULL, '{$s1}', '1', 'group-{$s2}-until', '', '{$s3}')");
+    $db->insert("INSERT INTO permissions_inheritance (id, child, parent, type, world) VALUES (NULL, '{$s1}', '{$s2}', '1', NULL)");
+    $db->insert("INSERT INTO permissions_entity (id, name, type, prefix, suffix) VALUES (NULL, '{$s1}','1', '&2[{$s2}]', '&f')");
 }
 
 function goodly($s1)
@@ -767,9 +767,9 @@ function inlog($s1, $s2)
 
 function inbdlog($s1)
 {
-    global $logs, $username, $ex;
+    global $logs, $username, $db;
     $time = time();
-    $ex->insert("INSERT into {$logs} (name,info,date) VALUES ('{$username}','{$s1}','{$time}')");
+    $db->insert("INSERT into {$logs} (name,info,date) VALUES ('{$username}','{$s1}','{$time}')");
 }
 
 function uptime($s1)
