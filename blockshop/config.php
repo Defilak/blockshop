@@ -3,8 +3,12 @@
 if (!defined('BLOCKSHOP')) {
     die("HACKING");
 }
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
-//session_start();
 
 include 'design.php';
 ////БД магазина///
@@ -25,9 +29,20 @@ $icons = 'img/icons/';
 
 $docRoot = getenv("DOCUMENT_ROOT");
 $dir = 'blockshop/'; ///папка с данным скриптом (слэш в конце обязательно)
+
+//таблицы плагинов
 //$cart = array('ShopCart','nickname','item_id','item_amount');///таблица плагина выдачи вещей(таблица, колонка имени, колонка id-блока, колонка кол-во)
 $cart = array('ShopCart', 'player', 'item', 'amount'); ///ShoppingCart
-$eco = array('iconomy', 'username', 'balance', 'money'); ///игровая валюта(таблица, колонка имени, колонка баланса,колонка реальной валюты)
+$eco = [
+    0 => 'iconomy', 
+    1 => 'username', 
+    2 => 'balance', 
+    3 => 'money',
+    'table' => 'iconomy', 
+    'name' => 'username', 
+    'balance' => 'balance', 
+    'money' => 'money'
+]; ///игровая валюта(таблица, колонка имени, колонка баланса,колонка реальной валюты)
 $real = array('money', 'name', 'money'); ///реальная валюта(таблица, колонка имени, колонка баланса)
 
 $donate = array('Игрок:0:0:0', 'Silver:50:730:0', 'Gold:150:30:1'); ///статусы (название,цена,кол-во дней,возможность загрузки HD)
@@ -70,7 +85,7 @@ $siz1 = count($cat);
 $siz2 = count($enchs);
 $siz3 = count($clrs);
 
-global $color, $asd, $serv, $cats;
+global $color, $asd, $serv, $cats, $q1;
 
 for ($i = 0, $size = $siz3; $i < $size; ++$i) {
     list($a, $b, $c) = explode(":", $clrs[$i]);
@@ -87,12 +102,14 @@ for ($i = 0, $size = $siz1; $i < $size; ++$i) {
     $cats .= '<option value="' . $i . '">' . $cat[$i] . '</option>';
 }
 
+$head = '';
 require_once 'db_connection.php';
+//require_once 'session_check.php';
 
 ///определяем переменные пользователя///
 $username = isset($_SESSION['shopname']) ? $_SESSION['shopname'] : null;
-
 if ($username) {
+
     //SELECT * FROM `iConomy` WHERE `username`='defi';1
     $q1 = $db->select("SELECT * FROM `{$eco[0]}` WHERE `{$eco[1]}`='{$username}';");
 
@@ -119,6 +136,7 @@ if ($username) {
     $username = 'Не игрок';
     $group = '-1';
 }
+
 ///вводим глобальную защиту от sql-инъекций)))))
 foreach ($_POST as $name => $value) {
     $_POST[$name] = str_replace(array("'", '"', ',', '\\', '<', '>', '$', '%'), '', $value);

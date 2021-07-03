@@ -49,21 +49,6 @@ $db->insert("CREATE TABLE IF NOT EXISTS `{$prefix}{$blocks}` (
   `server` varchar(40) COLLATE utf8_bin NOT NULL,
   `category` varchar(80) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE = InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;");
-
-$db->insert("CREATE TABLE IF NOT EXISTS `{$prefix}{$blocks}` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `image` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '1',
-  `block_id` varchar(11) COLLATE utf8_bin NOT NULL,
-  `amount` int(11) NOT NULL DEFAULT '0',
-  `price` int(11) NOT NULL DEFAULT '0',
-  `realprice` int(11) NOT NULL,
-  `name` varchar(35) CHARACTER SET utf8 NOT NULL,
-  `info` varchar(500) COLLATE utf8_bin NOT NULL,
-  `action` int(1) NOT NULL DEFAULT '0',
-  `server` varchar(40) COLLATE utf8_bin NOT NULL,
-  `category` varchar(80) COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id`)
 ) ENGINE = InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;");
 
 $db->insert("CREATE TABLE IF NOT EXISTS `{$prefix}{$logs}` (
@@ -72,20 +57,18 @@ $db->insert("CREATE TABLE IF NOT EXISTS `{$prefix}{$logs}` (
   `date` int(20) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;");
 
-$db->insert("CREATE TABLE IF NOT EXISTS `{$eco[0]}` (
-  `id` int(255) NOT NULL AUTO_INCREMENT,
-  `{$eco[1]}`  varchar(32) NOT NULL,
-  `{$eco[2]}` double(64,1) NOT NULL,
-  `{$eco[3]}` int(6) NOT NULL,
-  `group` int(2) NOT NULL DEFAULT '0',
-  `bancount` int(11) NOT NULL DEFAULT '0',
-  `buys` int(5) NOT NULL,
+//iconomy
+$db->insert("CREATE TABLE IF NOT EXISTS `{$eco['table']}` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(32) NOT NULL,
+  `balance` double(64,1) NOT NULL DEFAULT '0',
+  `money` int NOT NULL DEFAULT '0',
+  `group` int NOT NULL DEFAULT '0',
+  `bancount` int NOT NULL DEFAULT '0',
+  `buys` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `{$eco['1']}`  (`{$eco['1']}` ),
-  UNIQUE KEY `id_2` (`id`),
-  KEY `id` (`id`),
-  KEY `id_3` (`id`)
-) ENGINE = InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=645 ;");
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8_general_ci AUTO_INCREMENT=0 ;");
 
 $db->insert("CREATE TABLE IF NOT EXISTS `{$prefix}{$real['0']}` (
   `id` int(255) NOT NULL AUTO_INCREMENT,

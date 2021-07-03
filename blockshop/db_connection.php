@@ -17,3 +17,8 @@ $mysqli_settings = array(
 );
 
 $db = new simpleMysqli($mysqli_settings);
+
+
+// Подключение PDO
+$pdo = new PDO("mysql:host={$mysql_host};dbname={$mysql_db}", $mysql_user, $mysql_pass);
+$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING); //спавнить предупреждения

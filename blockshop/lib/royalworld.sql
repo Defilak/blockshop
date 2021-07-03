@@ -67,20 +67,17 @@ INSERT INTO `cab_user` (`id`, `game_money`, `real_money`, `purchases_count`, `ba
 -- Структура таблицы `iConomy`
 --
 
-CREATE TABLE IF NOT EXISTS `iConomy` (
-  `id` int(255) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `iconomy` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(32) NOT NULL,
-  `balance` double(64,1) NOT NULL,
-  `money` int(6) NOT NULL,
-  `group` int(2) NOT NULL DEFAULT '0',
-  `bancount` int(11) NOT NULL DEFAULT '0',
-  `buys` int(5) NOT NULL,
+  `balance` double(64,1) NOT NULL DEFAULT '0',
+  `money` int NOT NULL DEFAULT '0',
+  `group` int NOT NULL DEFAULT '0',
+  `bancount` int NOT NULL DEFAULT '0',
+  `buys` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `id_2` (`id`),
-  KEY `id` (`id`),
-  KEY `id_3` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=647 ;
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8_general_ci AUTO_INCREMENT=0 ;
 
 --
 -- Дамп данных таблицы `iConomy`
