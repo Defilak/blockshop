@@ -7,11 +7,11 @@
 <link rel="stylesheet" type="text/css" href="/<?= $dir ?>shop.css" />
 <?
 $actions = [
-    ['title' => 'Перейти в Магазин блоков', 'img' => 'shop', 'onclick' => 'toserver(); setbanlistF();'],
-    ['title' => 'Перейти в Личный Кабинет', 'img' => 'lk', 'onclick' => 'tolc(); setbanlistF();'],
-    ['title' => 'Сменить валюту',           'img' => '0', 'onclick' => 'valuta(); setbanlistF();'],
-    ['title' => 'Посмотреть корзину',       'img' => 'cart', 'onclick' => "props('cart'); setbanlistF();"],
-    ['title' => 'Посмотреть историю',       'img' => 'history', 'onclick' => "props('history'); setbanlistF();"],
+    ['title' => 'Перейти в Магазин блоков', 'img' => 'shop', 'onclick' => 'setbanlistF();toserver(); '],
+    ['title' => 'Перейти в Личный Кабинет', 'img' => 'lk', 'onclick' => 'setbanlistF();tolc();'],
+    ['title' => 'Сменить валюту',           'img' => '0', 'onclick' => 'setbanlistF();valuta(); '],
+    ['title' => 'Посмотреть корзину',       'img' => 'cart', 'onclick' => "setbanlistF();props('cart');"],
+    ['title' => 'Посмотреть историю',       'img' => 'history', 'onclick' => "setbanlistF();props('history');"],
     ['title' => 'Банлист',                  'img' => 'banlist', 'onclick' => 'tobanlist(); setbanlistT();']
 ];
 
