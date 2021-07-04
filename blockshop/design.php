@@ -64,7 +64,7 @@ $servdesign='
     </div>
 ';
 
-$userdesign='
+/*$userdesign='
 <div style="width:auto;float:right"> 
     {add} 
     <input type="image" class="imgbtn" src="/{dir}img/shop.png" onclick="setbanlistF(); toserver();" title="Перейти в Магазин блоков"> 
@@ -74,7 +74,7 @@ $userdesign='
     <input type="image" class="imgbtn" src="/{dir}img/history.png" onclick="props(\'history\'); setbanlistF();" title="Посмотреть историю"> 
     <input type="image" class="imgbtn" src="/{dir}img/banlist.png" onclick="tobanlist(); setbanlistT();" title="Банлист"> 
 </div>
-';
+';*/
 $ajaxcont = '<div id="cont" style="width:100%;line-height: 18px;">{cont}</div>';
 $ajaxmsg = '<div id="result" style="float:left;width:100%;margin-top:6px;"></div>';
 ///дизайн магазина///
