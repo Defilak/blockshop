@@ -1,75 +1,26 @@
 <?php
-
 define('BLOCKSHOP', true);
+include_once 'config.php';
 
-global $c;
-
-include('config.php');
-
-if (isset($_POST['login']) and isset($_POST['pass'])) {
-
-    $is_valid = false;
-    $login = $_POST['login'];
-    $passw = $_POST['pass'];
-
-    /*$startTime = microtime(true);
-            $fileDir = str_replace('\auth\webpart\blockshop', '', dirname(__FILE__));
-
-            require_once($fileDir.'/library/XenForo/Autoloader.php');
-
-            XenForo_Autoloader::getInstance()->setupAutoloader($fileDir.'/library');
-            XenForo_Application::initialize($fileDir.'/library', $fileDir);
-            XenForo_Application::set('page_start_time', $startTime);
-            
-            $auth = new XenForo_Authentication_Core12;
-            $db = XenForo_Application::get('db');*/
-
-    if (
-        !preg_match('/^[a-zA-Z0-9_-]+$/', $login) ||
-        !preg_match('/^[a-zA-Z0-9_-]+$/', $passw)
-    )
-        die('error1');
-
-    /*$sql = "SELECT user_id FROM xf_user WHERE username=".$db->quote($login);
-
-        $res = $db->fetchCol($sql);
-
-        if (!count($res)) die('Validation Error');
-        
-        $user_id = $res[0];
-        $sql = "select data from xf_user_authenticate where user_id=".$user_id;
-        $res = $db->fetchCol($sql);
-        if (!count($res)) die('Validation Error');
-
-        
-        $auth->setData($res[0]);
-        
-        $is_valid = $auth->authenticate($user_id, $passw);*/
-    if ($login == 'defi' && $passw == '123123') {
-        $is_valid = true;
-    }
-
-    if (!$is_valid)
-        die("Неверный логин или пароль!");
-    $_SESSION['shopname'] = $login;
-    header('Location: index.php');
-}
-if (empty($_SESSION['shopname'])) {
-    $head = '';
-    die($head . str_replace(array('{name}', '{info}'), array('Авторизируйтесь', $_template_auth), $lkblock));
-}
 
 $head = '';
 $add = '';
 $userv = '';
 
 require_once 'router.php';
+require_once 'core/check_login.php';
+require_once 'core/check_session.php';
 
+// это чтоб жсоном страницы норм подгружались, шапку не грузим если жсон
+if (is_not_routes('shop', 'lk', 'banlist')) {
+    require_once 'core/navbar_template.php';
+}
 
 ///шапка магазина///
-if (!is_route('shop') and !is_route('lk') and !is_route('banlist')) {
+/*if (!is_route('shop') and !is_route('lk') and !is_route('banlist')) {
 
     echo '<script>var url1 = \'/' . $dir . 'ajaxbuy.php\';var url2 = \'/' . $dir . 'index.php\'; var url3 = \'/' . $dir . '\';</script><link rel="stylesheet" type="text/css" href="/' . $dir . 'shop.css" /><script type="text/javascript" src="/' . $dir . 'shop.js"></script>';
+
     if ($group == 15)
         $add = '<input type="image" class="imgbtn" src="/' . $dir . 'img/user.png" onclick="props(\'edituser\');" title="Редактировать игрока(-ов)"> <input type="image" class="imgbtn" src="/' . $dir . 'img/add.png" onclick="bedit(\'admin=0\');" title="Добавить блок">';
     if (isset($group))
@@ -79,9 +30,7 @@ if (!is_route('shop') and !is_route('lk') and !is_route('banlist')) {
         $srv123 = str_replace(array('{name}', '{srv}', '{cats}'), array($username, $serv, $cats), $servdesign);
     $head = str_replace(array('{servdesign}', '{user}'), array($srv123, $userv), $headdesign);
     $_POST['lk'] = 1;
-}
-
-
+}*/
 
 
 
@@ -261,7 +210,7 @@ function shop($s1)
         $replace = array($q[$i]['id'], $q[$i]['info'], $s2, $q[$i]['name'], $dir, $q[$i]['image'], $s3, $q[$i]['amount'], $icons);
         $c .= str_replace($search, $replace, $shopdesign);
     }
-    
+
     $srv = str_replace(array('{name}', '{srv}', '{cats}'), array($username, $serv, $cats), $servdesign);
     $head = str_replace(array('{servdesign}', '{user}'), array($srv, $userv), $headdesign);
 

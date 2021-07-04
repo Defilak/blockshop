@@ -1,7 +1,20 @@
 <?php
 
+$_template_auth = '
+<form method="post" target="/auth">
+Логин<br>
+    <input type="text" name="login" value="">
+    <br>Пароль<br>
+    <input type="password" name="pass"><br>
+    <input class="button" type="submit" value="Вход">
+</form>
+';
 
-$_template_auth = '<center><form method="post">Логин<br><input type="text" name="login" value=""><br>Пароль<br><input type="password" name="pass"><br><input type="submit" value="Вход"></form></center>';
+
+function _include_page($name, $args = []) {
+    $params = $args;
+    include "pages/{$name}";
+}
 
 
 /*Переменные в дизайнах

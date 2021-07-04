@@ -3,12 +3,6 @@ if (!defined('BLOCKSHOP')) {
     die;
 }
 
-// Показываю страницу логина если нет сессии.
-if (empty($_SESSION['shopname'])) {
-    $response = $head.str_replace(['{name}', '{info}'], ['Авторизируйтесь', $_template_auth], $lkblock);
-    die($response);
-}
-
 $username = isset($_SESSION['shopname']) ? $_SESSION['shopname'] : null;
 if ($username) {
     try {

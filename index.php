@@ -1,35 +1,31 @@
-<!DOCTYPE html>
-<html>
+<?php
 
-<head>
-    <title>Личный кабинет</title>
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-    <meta charset=utf-8>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/blockshop/css/grid/simple-grid.css" />
+require_once 'blockshop/pages/page_container.php';
+//has auth
+/*if(isset($_SESSION['shopname'])) {
+    require_once 'blockshop/pages/page_container.php';
+    die;
+} else {
+    define('BLOCKSHOP', true);
+    require_once 'blockshop/pages/auth.page.php';
+    die;
+}*/
+/*if(empty($_SERVER['REQUEST_URI'])) {
+    include_once 'index.php';
+}
 
-    <link href="./favicon.ico" rel="icon" type="image/x-icon" />
 
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-</head>
+/*if (preg_match('/\.(?:png|jpg|jpeg|gif|css|ico|js)$/', $_SERVER["REQUEST_URI"])) {
+    return false;    // сервер возвращает файлы напрямую.
+} else {
+    include_once 'index.php';
+}*/
 
-<body>
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <?php
-
-                ini_set('display_errors', 1);
-                ini_set('display_startup_errors', 1);
-                error_reporting(E_ALL);
-
-                require_once 'blockshop/index.php';
-
-                ?>
-            </div>
-        </div>
-    </div>
-
-</body>
-
-</html>
+/*function is_route($route) {
+    return $route === $_SERVER["REQUEST_URI"];
+}
+*/

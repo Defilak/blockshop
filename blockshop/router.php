@@ -39,3 +39,12 @@ function is_route($route)
 {
     return isset($_POST[$route]);
 }
+
+function is_not_routes(...$routes) {
+    foreach($routes as $route) {
+        if(is_route($route)) {
+            return false;
+        }
+    }
+    return true;
+}

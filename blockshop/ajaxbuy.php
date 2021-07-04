@@ -2,6 +2,7 @@
 
 define('BLOCKSHOP', true);
 include 'config.php';
+include_once 'core/check_session.php';
 
 if ($group == '-1') {
     badly("Сударь, вам не мешало бы авторизироваться!");

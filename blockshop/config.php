@@ -4,6 +4,7 @@ if (!defined('BLOCKSHOP')) {
     die("HACKING");
 }
 
+global $c;
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -34,13 +35,13 @@ $dir = 'blockshop/'; ///папка с данным скриптом (слэш в
 //$cart = array('ShopCart','nickname','item_id','item_amount');///таблица плагина выдачи вещей(таблица, колонка имени, колонка id-блока, колонка кол-во)
 $cart = array('ShopCart', 'player', 'item', 'amount'); ///ShoppingCart
 $eco = [
-    0 => 'iconomy', 
-    1 => 'username', 
-    2 => 'balance', 
+    0 => 'iconomy',
+    1 => 'username',
+    2 => 'balance',
     3 => 'money',
-    'table' => 'iconomy', 
-    'name' => 'username', 
-    'balance' => 'balance', 
+    'table' => 'iconomy',
+    'name' => 'username',
+    'balance' => 'balance',
     'money' => 'money'
 ]; ///игровая валюта(таблица, колонка имени, колонка баланса,колонка реальной валюты)
 $real = array('money', 'name', 'money'); ///реальная валюта(таблица, колонка имени, колонка баланса)
@@ -104,10 +105,9 @@ for ($i = 0, $size = $siz1; $i < $size; ++$i) {
 
 $head = '';
 require_once 'db_connection.php';
-//require_once 'session_check.php';
 
 ///определяем переменные пользователя///
-$username = isset($_SESSION['shopname']) ? $_SESSION['shopname'] : null;
+/*$username = isset($_SESSION['shopname']) ? $_SESSION['shopname'] : null;
 if ($username) {
 
     //SELECT * FROM `iConomy` WHERE `username`='defi';1
@@ -135,7 +135,7 @@ if ($username) {
 } else {
     $username = 'Не игрок';
     $group = '-1';
-}
+}*/
 
 ///вводим глобальную защиту от sql-инъекций)))))
 foreach ($_POST as $name => $value) {
