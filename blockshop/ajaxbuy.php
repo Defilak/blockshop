@@ -86,7 +86,7 @@ if ($count == 1 and $group != '-1') {
 ///покупка предмета
 function buyblock($s1)
 {
-    global $blocks, $money, $iconomy, $cart, $logs, $username, $sklrub, $skleco, $db, $buys;
+    global $blocks, $money, $iconomy, $table_cart, $logs, $username, $sklrub, $skleco, $db, $buys;
     $add = '';
     $skidka = '';
     list($s1, $s2, $ss, $s3) = explode("::", $s1);
@@ -146,11 +146,11 @@ function buyblock($s1)
     inbdlog($info);
     upbalance($username, "-" . $price, $pl);
     upprop($username, 'buys=buys+1');
-    $q1 = $db->select("SELECT * from `{$r[0]['server']}` where `{$cart['1']}`='{$s3}' and `{$cart['2']}`='{$r[0]['block_id']}'");
+    $q1 = $db->select("SELECT * from `{$r[0]['server']}` where `{$table_cart['name']}`='{$s3}' and `{$table_cart['item']}`='{$r[0]['block_id']}'");
     if (count($q1) == 1) {
-        $db->update("UPDATE `{$r[0]['server']}` set `{$cart['3']}`= `{$cart['3']}` + {$amount}, price=price+{$backprice} where `{$cart['1']}`='{$s3}' and name='{$r[0]['name']}'");
+        $db->update("UPDATE `{$r[0]['server']}` set `{$table_cart['amount']}`= `{$table_cart['amount']}` + {$amount}, price=price+{$backprice} where `{$table_cart['name']}`='{$s3}' and name='{$r[0]['name']}'");
     } else {
-        $db->insert("INSERT INTO `{$r[0]['server']}`(id,`{$cart['1']}`,`{$cart['2']}`,`{$cart['3']}`, img, name, price) VALUES (NULL, '{$s3}','{$r[0]['block_id']}','{$amount}', '{$r[0]['image']}', '{$r[0]['name']}','{$backprice}');");
+        $db->insert("INSERT INTO `{$r[0]['server']}`(id,`{$table_cart['name']}`,`{$table_cart['item']}`,`{$table_cart['amount']}`, img, name, price) VALUES (NULL, '{$s3}','{$r[0]['block_id']}','{$amount}', '{$r[0]['image']}', '{$r[0]['name']}','{$backprice}');");
     }
     uptime(10);
     inlog('log.txt', " Куплен предмет <b>\"{$r[0]['name']}\"</b>{$add}. Количество: <b>{$skl3}</b>. Цена: <b>{$skl1}</b>");
@@ -221,16 +221,16 @@ function donate($s1)
 ///склад////
 function cart($s1)
 {
-    global $cart, $dir, $cartdesign, $server_names, $db, $goodly, $icons;
+    global $table_cart, $dir, $cartdesign, $server_names, $db, $goodly, $icons;
     $c = '';
     $m = '';
     $m .= infly('Здесь отображается список вещей, которые вы можете забрать в игре.<br> Для получения вещей в игре используйте команду: <b>/cart</b>');
     $siz = count($server_names);
     for ($i = 0, $size = $siz; $i < $size; ++$i) {
-        $q = $db->select("SELECT * FROM `{$server_names[$i]}` WHERE `{$cart['1']}`='{$s1}'");
+        $q = $db->select("SELECT * FROM `{$server_names[$i]}` WHERE `{$table_cart['name']}`='{$s1}'");
         $search = array('{id}', '{name}', '{dir}', '{img}', '{amount}', '{srv}', '{icons}');
         for ($u = 0; $u < count($q); $u++) {
-            $replace = array($q[$u]['id'], $q[$u]['name'], $dir, $q[$u]['img'], $q[$u][$cart['3']], $server_names[$i], $icons);
+            $replace = array($q[$u]['id'], $q[$u]['name'], $dir, $q[$u]['img'], $q[$u][$table_cart['amount']], $server_names[$i], $icons);
             $c .= str_replace($search, $replace, $cartdesign);
         }
     }
@@ -285,7 +285,7 @@ function giveskin()
 ///перевод другому игроку///
 function perevod($s1)
 {
-    global $username, $eco, $iconomy, $money, $skleco, $sklrub;
+    global $username, $iconomy, $money, $skleco, $sklrub;
     list($name, $summ, $type) = explode("::", $s1);
     $name = ifuser($name);
     if ($type == 0) {
@@ -382,18 +382,18 @@ function balance($s1)
 ///возврат покупки///
 function back($ss)
 {
-    global $username, $group, $cart, $skleco, $server_names, $db;
+    global $username, $group, $table_cart, $skleco, $server_names, $db;
     list($s1, $s2) = explode(":", $ss);
     if (!ctype_digit($s1) or !in_array($s2, $server_names)) {
         badly("Некорректные данные!");
     }
-    $q = $db->select("SELECT price from `{$s2}` where id='{$s1}' and `{$cart['1']}`='{$username}'");
+    $q = $db->select("SELECT price from `{$s2}` where id='{$s1}' and `{$table_cart['name']}`='{$username}'");
     if (count($q) != 1) {
         badly("Указанный блок не найден!");
     }
     $backprice = $q[0]['price'];
     $skl = skl($backprice, $skleco);
-    $db->delete("DELETE from `{$s2}` where id='{$s1}' and `{$cart['1']}`='{$username}'");
+    $db->delete("DELETE from `{$s2}` where id='{$s1}' and `{$table_cart['name']}`='{$username}'");
     $info = "Возврат с корзины:n:+{$skl}:n:0:n:264.png";
     inbdlog($info);
     upbalance($username, "+" . $backprice, 0);
@@ -604,25 +604,25 @@ function setstatus($s1)
 
 function addmoney($s1)
 {
-    global $real, $eco, $db;
+    global $table_economy, $db;
     list($type, $summ, $name) = explode(":", $s1);
     $name = ifuser($name);
     if (!ctype_digit($summ)) {
         badly("Некорректные данные");
     }
     if ($type == 1) {
-        $type = 3;
+        $type = 'money';
     } else {
-        $type = 2;
+        $type = 'balance';
     }
-    $db->update("UPDATE `{$eco['0']}` set `{$eco[$type]}`='{$summ}' where `{$eco['1']}`='{$name}'");
-    inlog('admin.txt', "Игроку {$name} дано {$summ} {$eco[$type]}");
+    $db->update("UPDATE `{$table_economy['table']}` set `{$table_economy[$type]}`='{$summ}' where `{$table_economy['name']}`='{$name}'");
+    inlog('admin.txt', "Игроку {$name} дано {$summ} {$table_economy[$type]}");
     goodly("Валюта установлена игроку <b>{$name}</b>!");
 }
 
 function edituser($s1)
 {
-    global $dir, $real, $eco, $player_groups, $edituserhead, $edituserbody, $db;
+    global $dir, $table_economy, $player_groups, $edituserhead, $edituserbody, $db;
     ///список статусов///
     $arr = [];
     $s = '';
@@ -633,7 +633,7 @@ function edituser($s1)
         $s3 = $player_groups[$i]['days'];
         $s .= '<option value="' . $i . '">' . $s2 . '</option>';
     }
-    $q = $db->select("SELECT * from `{$eco['0']}` where `{$eco['1']}` LIKE '{$s1}%%%%' LIMIT 0,50");
+    $q = $db->select("SELECT * from `{$table_economy['table']}` where `{$table_economy['name']}` LIKE '{$s1}%%%%' LIMIT 0,50");
     ///создаем массив забаненных///
     $w = $db->select("SELECT * from banlist");
     
@@ -645,7 +645,7 @@ function edituser($s1)
 
     $search = array('{name}', '{money}', '{icon}', '{opt}', '{bans}', '{dir}', '{buys}');
     for ($i = 0; $i < count($q); $i++) {
-        if (in_array($q[$i][$eco['1']], $arr)) {
+        if (in_array($q[$i][$table_economy['name']], $arr)) {
             $grp = '<option value="ban">Забанен</option>' . $s;
         } else {
             $grp = '<option value="ban">Забанен</option>' . str_replace('value="' . $q[$i]['group'] . '"', 'value="' . $q[$i]['group'] . '" selected', $s);
@@ -654,7 +654,7 @@ function edituser($s1)
             $grp = '<option value="15">Админ</option>' . $s;
         }
         if ($q[$i]['group'] != '-1') {
-            $replace = array($q[$i][$eco['1']], round($q[$i][$eco['3']]), round($q[$i][$eco['2']]), $grp, $q[$i]['bancount'], $dir, $q[$i]['buys']);
+            $replace = array($q[$i][$table_economy['name']], round($q[$i][$table_economy['money']]), round($q[$i][$table_economy['balance']]), $grp, $q[$i]['bancount'], $dir, $q[$i]['buys']);
             $c .= str_replace($search, $replace, $edituserbody);
         }
     }
@@ -746,11 +746,11 @@ function delblock($s1)
 ///побочные функции///
 function ifuser($s1)
 {
-    global $eco, $username, $db;
+    global $table_economy, $username, $db;
     if (empty($s1)) {
         return $username;
     }
-    $q = $db->select("SELECT `{$eco['1']}` from `{$eco['0']}` where `{$eco['1']}`='{$s1}'");
+    $q = $db->select("SELECT `{$table_economy['name']}` from `{$table_economy['table']}` where `{$table_economy['name']}`='{$s1}'");
     if (count($q) == 1) {
         return $s1;
     } else {
@@ -760,25 +760,25 @@ function ifuser($s1)
 
 function upbalance($s1, $s2, $s3)
 {
-    global $eco, $db;
+    global $table_economy, $db;
     if ($s3 == 1) {
-        $s3 = $eco['3'];
+        $s3 = $table_economy['money'];
     } else {
-        $s3 = $eco['2'];
+        $s3 = $table_economy['balance'];
     }
-    $db->update("UPDATE `{$eco['0']}` set {$s3}={$s3}{$s2} where `{$eco['1']}`='{$s1}'");
+    $db->update("UPDATE `{$table_economy['table']}` set {$s3}={$s3}{$s2} where `{$table_economy['name']}`='{$s1}'");
 }
 
 function upgroup($s1, $s2)
 {
-    global $eco, $db;
-    $db->update("UPDATE `{$eco['0']}` set `group`='{$s2}' where `{$eco['1']}`='{$s1}'");
+    global $table_economy, $db;
+    $db->update("UPDATE `{$table_economy['table']}` set `group`='{$s2}' where `{$table_economy['name']}`='{$s1}'");
 }
 
 function upprop($s1, $s2)
 {
-    global $eco, $db;
-    $db->update("UPDATE `{$eco['0']}` set {$s2} where `{$eco['1']}`='{$s1}'");
+    global $table_economy, $db;
+    $db->update("UPDATE `{$table_economy['table']}` set {$s2} where `{$table_economy['name']}`='{$s1}'");
 }
 
 function pex($s1, $s2, $s3)

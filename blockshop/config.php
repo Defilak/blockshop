@@ -39,18 +39,20 @@ function blockshop_public($path = '') {
 
 //таблицы плагинов
 $cart = array('ShopCart', 'player', 'item', 'amount'); ///таблица плагина выдачи вещей(таблица, колонка имени, колонка id-блока, колонка кол-во)
-$eco = [
-    0 => 'iconomy',
-    1 => 'username',
-    2 => 'balance',
-    3 => 'money',
+
+$table_cart = [
+    'table' => 'ShopCart',
+    'name' => 'player',
+    'item' => 'item',
+    'amount' => 'amount'
+];
+
+$table_economy = [ //игровая валюта(таблица, колонка имени, колонка баланса,колонка реальной валюты)
     'table' => 'iconomy',
     'name' => 'username',
     'balance' => 'balance',
     'money' => 'money'
-]; ///игровая валюта(таблица, колонка имени, колонка баланса,колонка реальной валюты)
-$real = array('money', 'name', 'money'); ///реальная валюта(таблица, колонка имени, колонка баланса)
-
+];
 
 $player_groups = [ // Донатские группы
     [

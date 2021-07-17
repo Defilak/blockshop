@@ -12,7 +12,7 @@ if (empty($_SESSION['shopname'])) {
 $username = isset($_SESSION['shopname']) ? $_SESSION['shopname'] : null;
 if ($username) {
     try {
-        $stmt = $pdo->prepare("SELECT * FROM `{$eco['table']}` WHERE `{$eco['name']}`= :name;");
+        $stmt = $pdo->prepare("SELECT * FROM `{$table_economy['table']}` WHERE `{$table_economy['name']}`= :name;");
         $stmt->bindValue(':name', $username);
         $stmt->execute();
 
@@ -20,7 +20,7 @@ if ($username) {
         //create row if no exists
         $user = $stmt->fetch();
         if(empty($user)) {
-            $stmt_insert = $pdo->prepare("INSERT INTO `{$eco['table']}` (id,`{$eco['name']}`,`{$eco['balance']}`) VALUES (NULL, :name,:nominal);");
+            $stmt_insert = $pdo->prepare("INSERT INTO `{$table_economy['table']}` (id,`{$table_economy['name']}`,`{$table_economy['balance']}`) VALUES (NULL, :name,:nominal);");
             $stmt_insert->bindValue(':name', $username);
             $stmt_insert->bindValue(':nominal', $nominal);
             $stmt_insert->execute();
@@ -31,8 +31,8 @@ if ($username) {
         }
 
         //init vars
-        $money = $user[$eco['money']];
-        $iconomy = $user[$eco['balance']];
+        $money = $user[$table_economy['money']];
+        $iconomy = $user[$table_economy['balance']];
         $group = $user['group'];
         $bancount = $user['bancount'];
         $buys = $user['buys'];

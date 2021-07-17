@@ -24,4 +24,4 @@ if ($my_crc !=$crc)
 echo "OK$inv_id\n";
 
 DB::insert("INSET into transactions (id,money,name,date) VALUES (NULL,'{$out_summ}','{$username}','{$date}')");
-DB::update("UPDATE `{$eco[0]}` set `{$eco[3]}`='{$q[0]['money']}' where name='{$username}'");
+DB::update("UPDATE `{$table_economy['table']}` set `{$table_economy['money']}`='{$q[0]['money']}' where name='{$username}'");
