@@ -3,7 +3,7 @@
 //$s = array('Medieval', 'Imphar'); ///массив серверов(первое по умолчанию)
 
 
-$stmt = $pdo->prepare("SELECT * FROM `{$banlist}_{$s[$server_id]}` LIMIT 25");
+$stmt = $pdo->prepare("SELECT * FROM `{$banlist}_{$server_names[$server_id]}` LIMIT 25");
 $stmt->execute();
 
 $result = $stmt->fetchAll();

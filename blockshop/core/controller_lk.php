@@ -60,7 +60,7 @@ for ($i = 0, $size = $siz3; $i < $size; ++$i) {
 <div class="block personal_data">
     <div class="jaw personal_data_jaw">Личные данные</div>
     <div class="content personal_data_content">
-        <div class="leftpanel">
+        <div class="leftpanel" style="float: left;">
             <center>
                 <iframe name="skinframe" id="skinframe" style="display:none"></iframe>
                 <div class="pics" id="giveskin">

@@ -4,6 +4,19 @@ if (!defined('BLOCKSHOP')) {
     die("HACKING");
 }
 
+$siz = count($server_names);
+$siz2 = count($enchs);
+
+global $asd, $serv, $cats, $q1;
+
+for ($i = 0, $size = $siz2; $i < $size; ++$i) {
+    list($a, $b) = explode(":", $enchs[$i]);
+    $asd .= '<option value="' . $a . '">' . $b . '</option>';
+}
+
+for ($i = 0, $size = $siz; $i < $size; ++$i) {
+    $serv .= '<option value="' . $i . '">' . $server_names[$i] . '</option>';
+}
 
 ////функции///
 function servlist()
