@@ -3,12 +3,19 @@ if (!defined('BLOCKSHOP')) {
     die;
 }
 
+// Показываю страницу логина если нет сессии.
+if (empty($_SESSION['shopname'])) {
+    _include_page('auth.page.php');
+    die;
+}
+
 $username = isset($_SESSION['shopname']) ? $_SESSION['shopname'] : null;
 if ($username) {
     try {
         $stmt = $pdo->prepare("SELECT * FROM `{$eco['table']}` WHERE `{$eco['name']}`= :name;");
         $stmt->bindValue(':name', $username);
         $stmt->execute();
+
 
         //create row if no exists
         $user = $stmt->fetch();

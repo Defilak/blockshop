@@ -2,6 +2,16 @@
 
 define('BLOCKSHOP', true);
 include 'config.php';
+
+include 'design.php';
+
+///вводим глобальную защиту от sql-инъекций)))))
+foreach ($_POST as $name => $value) {
+    $_POST[$name] = str_replace(array("'", '"', ',', '\\', '<', '>', '$', '%'), '', $value);
+}
+$a = array_map('trim', $_POST);
+$count = count($a);
+
 include_once 'core/check_session.php';
 
 if ($group == '-1') {
@@ -12,6 +22,11 @@ if ($count > 1) {
     $_SESSION['buytime'] = $time + 60;
     badly("Фриз тебе на одну минуту за такие дела!");
 }
+
+if(empty($_SESSION['buytime'])) {
+    $_SESSION['buytime'] = 0;
+}
+
 //////Условия использования функций///////
 if ($count == 1 and $group != '-1') {
     if ($ban == 1) {
@@ -72,6 +87,8 @@ if ($count == 1 and $group != '-1') {
 function buyblock($s1)
 {
     global $blocks, $money, $iconomy, $cart, $logs, $username, $sklrub, $skleco, $db, $buys;
+    $add = '';
+    $skidka = '';
     list($s1, $s2, $ss, $s3) = explode("::", $s1);
     $s3 = ifuser($s3);
     if (!ctype_digit($s2) or $s2 == '0' or $s2 > 128 or !preg_match("|^[\d]+$|", $s1)) {
@@ -200,6 +217,8 @@ function donate($s1)
 function cart($s1)
 {
     global $cart, $dir, $cartdesign, $s, $db, $goodly, $icons;
+    $c = '';
+    $m = '';
     $m .= infly('Здесь отображается список вещей, которые вы можете забрать в игре.<br> Для получения вещей в игре используйте команду: <b>/cart</b>');
     $siz = count($s);
     for ($i = 0, $size = $siz; $i < $size; ++$i) {
@@ -220,6 +239,8 @@ function cart($s1)
 function history($s1)
 {
     global $dir, $logs, $historydesign, $db, $goodly, $icons;
+    $m = '';
+    $c = '';
     $m .= infly('Здесь отображаются все совершенные вами действия в магазине за ближайшие 10 суток.');
     $q = $db->select("SELECT * FROM {$logs} WHERE name='{$s1}' ORDER BY date DESC");
     $time = time() - 864000;
@@ -272,7 +293,7 @@ function perevod($s1)
     if ($summ < 1) {
         badly("Очень щедро с вашей стороны!");
     }
-    if (!$ctype_digit($summ) or empty($name)) {
+    if (!ctype_digit($summ) or empty($name)) {
         badly("Некорректные данные!");
     }
     if ($bal < $summ) {
@@ -595,6 +616,9 @@ function edituser($s1)
 {
     global $dir, $real, $eco, $donate, $edituserhead, $edituserbody, $db;
     ///список статусов///
+    $arr = [];
+    $s = '';
+    $c = '';
     for ($i = 0, $size = count($donate); $i < $size; ++$i) {
         list($s2, $s3, $s3) = explode(":", $donate[$i]);
         $s .= '<option value="' . $i . '">' . $s2 . '</option>';
@@ -602,9 +626,13 @@ function edituser($s1)
     $q = $db->select("SELECT * from `{$eco['0']}` where `{$eco['1']}` LIKE '{$s1}%%%%' LIMIT 0,50");
     ///создаем массив забаненных///
     $w = $db->select("SELECT * from banlist");
-    for ($i = 0; $i < count($q); $i++) {
-        $arr[] .= $w[0]['name'];
+    
+    if(!empty($w)) {
+        for ($i = 0; $i < count($q); $i++) {
+            $arr[] .= $w[0]['name'];
+        }
     }
+
     $search = array('{name}', '{money}', '{icon}', '{opt}', '{bans}', '{dir}', '{buys}');
     for ($i = 0; $i < count($q); $i++) {
         if (in_array($q[$i][$eco['1']], $arr)) {
@@ -626,6 +654,11 @@ function edituser($s1)
 function edit($s1)
 {
     global $blocks, $s, $cat, $db;
+    
+    /*if(count(explode("::", $s1)) < 11) {
+        badly("В полях ввода обнаружены запрещенные символы!1");
+    }*/
+
     list($image, $blockid, $name, $amount, $price, $realprice, $server, $action, $mid, $category, $ench) = explode("::", $s1);
     if (
         !ctype_digit($price) or !ctype_digit($realprice) or !ctype_digit($mid) or !ctype_digit($action) or $action < 0 or $action > 99 or !ctype_digit($amount) or $amount < 1 or !isset($s[$server]) or !isset($cat[$category]) or
@@ -651,14 +684,18 @@ function admin($s1)
         badly("Неверно заполнено одно из полей!");
     }
     ///массив изображений блоков
-    $files = scandir('images/');
+    $files = scandir($icons);
     $l = sizeof($files);
+    $imglist = '';
+    $c = '';
     for ($i = 2; $i < $l; $i++) {
-        $imglist .= str_replace(array('{img}', '{dir}'), array($files[$i], $dir), $admlist);
+        $imglist .= str_replace(array('{img}', '{dir}', '{icons}'), array($files[$i], $dir, $icons), $admlist);
     }
     ///определение значений добавления/редактирования блоков
     $serv = servlist();
     $cats = catlist();
+    $f2 = '';
+    $f3 = '';
     if ($s1 != 0) {
         $q = $db->select("SELECT * FROM {$blocks} where id='{$s1}'");
         $f1 = str_replace(array('{dir}', '{img}', '{icons}'), array($dir, $q[0]['image'], $icons), $admbox);

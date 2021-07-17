@@ -63,6 +63,20 @@ if (file_exists("{$docRoot}/{$path_skin}{$username}.png")) {
     $skin_preview_back = "/{$path_skin}2/$username.png?$rand";
 }
 
+//cveta/
+//Массив цветов///
+/*$clrs = array(
+    '0:black:Черный', '1:#0000bf:Темно-синий', '2:#00bf00:Зеленый', '3:#00bfbf:Темно-голубой', '4:#bf0000:Кровавый',
+    '5:#bf00bf:Темно-розовый', '6:#bfbf00:Цвет поноса', '7:#bfbfbf:Серый', '8:#404040:Темно-серый', '9:#4040ff:Синий', 'a:#40ff40:Светло-зеленый',
+    'b:#40ffff:Голубой', 'c:#ff4040:Красный', 'd:#ff40ff:Розовый', 'e:#ffff40:Желтый', 'f:#ffffff:',
+);*/
+$siz3 = count($clrs);
+$color = '';
+for ($i = 0, $size = $siz3; $i < $size; ++$i) {
+    list($a, $b, $c) = explode(":", $clrs[$i]);
+    $color .= '<option value="' . $a . '"  style="background:' . $b . ';">' . $c . '</option>';
+}
+
 ?>
 <div class="block personal_data">
     <div class="jaw personal_data_jaw">Личные данные</div>

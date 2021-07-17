@@ -3,7 +3,6 @@ if (!defined('BLOCKSHOP')) {
     die;
 }
 
-
 if ($_SERVER['REQUEST_URI'] == '/auth' || (isset($_POST['login']) && isset($_POST['password']))) {
     $login = $_POST['login'];
     $password = $_POST['password'];
@@ -29,8 +28,10 @@ if ($_SERVER['REQUEST_URI'] == '/auth' || (isset($_POST['login']) && isset($_POS
     header('Location: /');
 }
 
-// Показываю страницу логина если нет сессии.
-if (empty($_SESSION['shopname'])) {
-    _include_page('auth.page.php');
-    die;
+function ErrorPage404()
+{
+    $host = 'http://' . $_SERVER['HTTP_HOST'] . '/';
+    header('HTTP/1.1 404 Not Found');
+    header("Status: 404 Not Found");
+    header('Location:' . $host . '404');
 }

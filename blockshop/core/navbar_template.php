@@ -1,10 +1,8 @@
 <script type="text/javascript">
-    var url1 = '/<?= $dir ?>ajaxbuy.php';
-    var url2 = '/<?= $dir ?>index.php';
-    var url3 = '/<?= $dir ?>';
+var url1 = '/<?= $dir ?>ajaxbuy.php'; var url2 = '/<?= $dir ?>index.php'; var url3 = '/<?= $dir ?>';
 </script>
 <script type="text/javascript" src="/<?= $dir ?>shop.js"></script>
-<link rel="stylesheet" type="text/css" href="/<?= $dir ?>shop.css" />
+<!--<link rel="stylesheet" type="text/css" href="/<?= $dir ?>shop.css" />-->
 <?
 $actions = [
     ['title' => 'Перейти в Магазин блоков', 'img' => 'shop', 'onclick' => 'setbanlistF();toserver(); '],
@@ -24,24 +22,33 @@ if ($group == 15) {
     );
 }
 
+
+$siz1 = count($cat);
+for ($i = 0, $size = $siz1; $i < $size; ++$i) {
+    $cats .= '<option value="' . $i . '">' . $cat[$i] . '</option>';
+}
+
 $_POST['lk'] = 1;
+
 ?>
-<div class="headdesign" style="width:100%;float:left;">
+<div class="navbar navbar-light bg-light">
+    <div class="container-fluid">
 
-    <? if ($group != '-1' && $group != -1) { ?>
-        <div id="serverlist" style="float:left;">
-            <select id="server" class="svlist" onchange="toserver();" title="Выберите сервер"><?= $serv ?></select>
-            <select id="category" class="svlist" onchange="toserver();" title="Выберите категорию"><?= $cats ?></select>
-            <input type="text" class="svlist" style="padding:6px;" id="usercheck" value placeholder="Кому берем?">
-        </div>
-    <? } ?>
+        <? if ($group != -1) { ?>
+            <div class="d-flex">
+                <select id="server" class="form-select form-select-sm me-2" onchange="toserver();" title="Выберите сервер"><?= $serv ?></select>
+                <select id="category" class="form-select form-select-sm me-2" onchange="toserver();" title="Выберите категорию"><?= $cats ?></select>
+                <input id="usercheck" class="form-control form-select-sm me-2" type="text" value placeholder="Кому берем?">
+            </div>
+        <? } ?>
 
-    <? if (isset($group)) { ?>
-        <div class="userv" style="width:auto;float:right">
-            <? foreach ($actions as $action) { ?>
-                <input src="/<?= $dir . 'img/' . $action['img'] ?>.png" onclick="<?= $action['onclick'] ?>" title="<?= $action['title'] ?>" type="image" class="imgbtn" <?=$action['img'] === '0' ? 'id="changeval" value="0"' : ''?>/>
-            <? } ?>
-        </div>
-    <? } ?>
+        <? if (isset($group)) { ?>
+            <div class="d-flex">
+                <? foreach ($actions as $action) { ?>
+                    <input src="/<?= $dir . 'img/' . $action['img'] ?>.png" onclick="<?= $action['onclick'] ?>" title="<?= $action['title'] ?>" type="image" class="imgbtn m-1" <?= $action['img'] === '0' ? 'id="changeval" value="0"' : '' ?> />
+                <? } ?>
+            </div>
+        <? } ?>
 
+    </div>
 </div>

@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('BLOCKSHOP')) {
     die;
 }
@@ -19,6 +20,14 @@ $mysqli_settings = array(
 $db = new simpleMysqli($mysqli_settings);
 
 
-// Подключение PDO
-$pdo = new PDO("mysql:host={$mysql_host};dbname={$mysql_db}", $mysql_user, $mysql_pass);
-$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING); //спавнить предупреждения
+// Подключение базы 
+DB::initParams([
+    'host' => $mysql_host,
+    'port' => $mysql_port,
+    'db_name' => $mysql_db,
+    'user' => $mysql_user,
+    'password' => $mysql_pass
+]);
+
+//удалировать
+$pdo = DB::getConnection();

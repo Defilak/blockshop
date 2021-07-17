@@ -4,23 +4,20 @@ if (!defined('BLOCKSHOP')) {
     die("HACKING");
 }
 
-global $c;
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
+global $eco;
 
-include 'design.php';
 ////БД магазина///
 $mysql_host = 'localhost';
 $mysql_user = 'root';
 $mysql_pass = 'root';
 $mysql_db = 'blockshop';
+$mysql_port = 3306;
 $charset = 'UTF8';
-
-//$db_table = 'xf_user';
-//$db_tableOther = 'xf_user_authenticate';
 
 $banlist = 'banlist'; //Стандартная таблица банлиста
 $blocks = 'sale'; //таблица с блоками
@@ -32,8 +29,7 @@ $docRoot = getenv("DOCUMENT_ROOT");
 $dir = 'blockshop/'; ///папка с данным скриптом (слэш в конце обязательно)
 
 //таблицы плагинов
-//$cart = array('ShopCart','nickname','item_id','item_amount');///таблица плагина выдачи вещей(таблица, колонка имени, колонка id-блока, колонка кол-во)
-$cart = array('ShopCart', 'player', 'item', 'amount'); ///ShoppingCart
+$cart = array('ShopCart', 'player', 'item', 'amount'); ///таблица плагина выдачи вещей(таблица, колонка имени, колонка id-блока, колонка кол-во)
 $eco = [
     0 => 'iconomy',
     1 => 'username',
@@ -82,111 +78,18 @@ $clrs = array(
     'b:#40ffff:Голубой', 'c:#ff4040:Красный', 'd:#ff40ff:Розовый', 'e:#ffff40:Желтый', 'f:#ffffff:',
 );
 $siz = count($s);
-$siz1 = count($cat);
 $siz2 = count($enchs);
-$siz3 = count($clrs);
 
-global $color, $asd, $serv, $cats, $q1;
+global $asd, $serv, $cats, $q1;
 
-for ($i = 0, $size = $siz3; $i < $size; ++$i) {
-    list($a, $b, $c) = explode(":", $clrs[$i]);
-    $color .= '<option value="' . $a . '"  style="background:' . $b . ';">' . $c . '</option>';
-}
 for ($i = 0, $size = $siz2; $i < $size; ++$i) {
     list($a, $b) = explode(":", $enchs[$i]);
     $asd .= '<option value="' . $a . '">' . $b . '</option>';
 }
+
 for ($i = 0, $size = $siz; $i < $size; ++$i) {
     $serv .= '<option value="' . $i . '">' . $s[$i] . '</option>';
 }
-for ($i = 0, $size = $siz1; $i < $size; ++$i) {
-    $cats .= '<option value="' . $i . '">' . $cat[$i] . '</option>';
-}
 
-$head = '';
 require_once 'db_connection.php';
-
-///определяем переменные пользователя///
-/*$username = isset($_SESSION['shopname']) ? $_SESSION['shopname'] : null;
-if ($username) {
-
-    //SELECT * FROM `iConomy` WHERE `username`='defi';1
-    $q1 = $db->select("SELECT * FROM `{$eco[0]}` WHERE `{$eco[1]}`='{$username}';");
-
-    if (count($q1) == 0) {
-        //INSERT INTO `iConomy` (id,`username`,`balance`) VALUES (NULL, 'defi','0');
-        $db->insert("INSERT INTO `{$eco[0]}` (id,`{$eco[1]}`,`{$eco[2]}`) VALUES (NULL, '{$username}','{$nominal}');");
-        //SELECT * FROM `iconomy` WHERE `username`='defi';
-        $q1 = $db->select("SELECT * FROM `{$eco[0]}` WHERE `{$eco[1]}`='{$username}';");
-    }
-
-    $money = $q1[0][$eco[3]];
-    $iconomy = $q1[0][$eco[2]];
-    $group = $q1[0]['group'];
-    $bancount = $q1[0]['bancount'];
-    $buys = $q1[0]['buys'];
-    $q2 = $db->select("select * from {$banlist} where name='{$username}'");
-
-    if (count($q2) == 1) {
-        $ban = 1;
-    } else {
-        $ban = 0;
-    }
-} else {
-    $username = 'Не игрок';
-    $group = '-1';
-}*/
-
-///вводим глобальную защиту от sql-инъекций)))))
-foreach ($_POST as $name => $value) {
-    $_POST[$name] = str_replace(array("'", '"', ',', '\\', '<', '>', '$', '%'), '', $value);
-}
-$a = array_map('trim', $_POST);
-$count = count($a);
-
-////функции///
-function servlist()
-{
-    global $s;
-    $siz = count($s);
-    $l = '';
-    for ($i = 0, $size = $siz; $i < $size; ++$i) {
-        $l .= '<option value="' . $i . '">' . $s[$i] . '</option>';
-    }
-    return $l;
-}
-
-function catlist()
-{
-    global $cat;
-    $siz = count($cat);
-    $l = '';
-    for ($i = 0, $size = $siz; $i < $size; ++$i) {
-        $l .= '<option value="' . $i . '">' . $cat[$i] . '</option>';
-    }
-    return $l;
-}
-
-function bal($s1, $s2)
-{
-    global $q1;
-    $q = mysqli_fetch_assoc($q1);
-    return $q[$s2];
-}
-
-function skl($n, $s1)
-{
-    $n = round($n);
-    $m = $n % 10;
-    $j = $n % 100;
-    if ($m == 1) {
-        $s = $s1[0];
-    }
-    if ($m >= 2 && $m <= 4) {
-        $s = $s1[1];
-    }
-    if ($m == 0 || $m >= 5 || ($j >= 10 && $j <= 20)) {
-        $s = $s1[2];
-    }
-    return $n . ' ' . $s;
-}
+require_once 'common.php';
