@@ -1,6 +1,6 @@
 <?php
 
-    $docRoot = getenv("DOCUMENT_ROOT");
+    //$docRooat = getenv("DOCUMENT_ROOT");
     
     $dir = 'auth/webpart/blockshop/';
     $path_skin = $dir.'mc/skins/';
@@ -10,7 +10,7 @@
     /*$way_skif = $path_skin_abs.$username.'.png';
    
 
-    if (!file_exists($docRoot.'/'.$dir.$way_skif)) {
+    if (!file_exists($_SERVER['DOCUMENT_ROOT'].'/'.$dir.$way_skif)) {
         $way_skif = $path_skin_abs.'char.png';
     }
     
@@ -25,7 +25,7 @@
 
     $way_skif = $path_skin.$user_name.'.png';
 
-    if (!file_exists($docRoot.'/'.$dir.$way_skif)) 
+    if (!file_exists($_SERVER['DOCUMENT_ROOT'].'/'.$dir.$way_skif)) 
     {
         $way_skif = $path_skin_abs.'char.png';
     }
@@ -38,12 +38,12 @@
     $way_skin =  $path_skin_abs.$user_name.'.png';
     $way_cloak = $path_cloak.$user_name.'.png';
 
-    if (!file_exists($docRoot.'/'.$dir.$way_skin)) 
+    if (!file_exists($_SERVER['DOCUMENT_ROOT'].'/'.$dir.$way_skin)) 
     {
         $way_skin = $path_skin_abs.'char.png';
     }
 
-    if (!file_exists($docRoot.'/'.$way_cloak)) 
+    if (!file_exists($_SERVER['DOCUMENT_ROOT'].'/'.$way_cloak)) 
     {
         $way_cloak = false;
     } 

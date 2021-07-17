@@ -160,17 +160,22 @@ function buyblock($s1)
 ///покупка/продление статусов///
 function donate($s1)
 {
-    global $username, $group, $money, $sklrub, $donate, $logs, $time, $db;
-    if (!isset($donate[$s1])) {
+    global $username, $group, $money, $sklrub, $player_groups, $logs, $time, $db;
+    if (!isset($player_groups[$s1])) {
         badly("Данный статус не существует!");
     }
-    list($name, $price, $days) = explode(":", $donate[$s1]);
+
+    $name = $player_groups[$s1]['name'];
+    $price = $player_groups[$s1]['price'];
+    $days = $player_groups[$s1]['days'];
     if ($money < $price) {
         badly("Недостаточно средств для покупки статуса!");
     }
     ///отключение///
     if ($price == 0) {
-        list($n, $p, $a) = explode(":", $donate[$group]);
+        $n = $player_groups[$group]['name'];
+        $p = $player_groups[$group]['price'];
+        $a = $player_groups[$group]['days'];
         $q = $db->select("SELECT value from permissions where name='{$username}'");
         $tm = ($q[0]['value'] - $time) / 86400;
         $db->delete("DELETE from permissions where name='{$username}'");
@@ -266,10 +271,10 @@ function history($s1)
 ///получаем превью скинов
 function giveskin()
 {
-    global $path_skin, $path_skin_abs, $username, $docRoot;
+    global $path_skin, $path_skin_abs, $username;
     $rand = rand(1, 9999);
 
-    if (file_exists($docRoot . '/' . $path_skin . $username . '.png')) {
+    if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $path_skin . $username . '.png')) {
         $d = '<img src="/' . $path_skin . '1/' . $username . '.png?' . $rand . '" alt=""/> <img src="/' . $path_skin . '2/' . $username . '.png?' . $rand . '" alt=""/>';
     } else {
         $d = '<img src="/' . $path_skin . '1/char.png" alt=""/> <img src="/' . $path_skin . '2/char.png" alt=""/>';
@@ -412,21 +417,21 @@ function prefix($s1)
 ///удаление скина/плаща///
 function removeskin($s1)
 {
-    global $path_skin, $path_cloak, $username, $docRoot;
+    global $path_skin, $path_cloak, $username;
 
     if ($s1 == 'skin') {
-        unlink($docRoot . '/' . $path_skin . $username . '.png');
-        unlink($docRoot . '/' . $path_skin . '1/' . $username . '.png');
-        unlink($docRoot . '/' . $path_skin . '2/' . $username . '.png');
+        unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $path_skin . $username . '.png');
+        unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $path_skin . '1/' . $username . '.png');
+        unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $path_skin . '2/' . $username . '.png');
         goodly("Скин удален!");
     } else {
-        unlink($docRoot . '/' . $path_cloak . $username . '.png');
+        unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $path_cloak . $username . '.png');
         goodly("Плащ удален!");
     }
 }
 
 if (isset($_FILES['cloak'])) {
-    global $path_skin, $path_cloak, $username, $docRoot;
+    global $path_skin, $path_cloak, $username;
 
     $imageinfo = getimagesize($_FILES['cloak']['tmp_name']);
     if ($imageinfo == null) {
@@ -450,7 +455,7 @@ if (isset($_FILES['cloak'])) {
         if ($_FILES['cloak']['size'] > $em) {
             exit();
         }
-        if (move_uploaded_file($_FILES['cloak']['tmp_name'], $docRoot . '/' . $path_cloak . $username . '.png')) {
+        if (move_uploaded_file($_FILES['cloak']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/' . $path_cloak . $username . '.png')) {
             exit();
         }
     } else {
@@ -485,7 +490,7 @@ if (isset($_FILES['skin'])) {
         if ($_FILES['skin']['size'] > $em) {
             die('Неверный размер');
         }
-        if (!move_uploaded_file($_FILES['skin']['tmp_name'], $docRoot . '/' . $path_skin . $username . '.png')) {
+        if (!move_uploaded_file($_FILES['skin']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/' . $path_skin . $username . '.png')) {
             die('Ошибка записи');
         }
 
@@ -496,7 +501,7 @@ if (isset($_FILES['skin'])) {
 
         $way_skif = $path_skin . $user_name . '.png';
 
-        if (!file_exists($docRoot . '/' . $dir . $way_skif)) {
+        if (!file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $dir . $way_skif)) {
             $way_skif = $path_skin_abs . 'char.png';
         }
 
@@ -508,11 +513,11 @@ if (isset($_FILES['skin'])) {
         $way_skin = $path_skin_abs . $user_name . '.png';
         $way_cloak = $path_cloak . $user_name . '.png';
 
-        if (!file_exists($docRoot . '/' . $dir . $way_skin)) {
+        if (!file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $dir . $way_skin)) {
             $way_skin = $path_skin_abs . 'char.png';
         }
 
-        if (!file_exists($docRoot . '/' . $way_cloak)) {
+        if (!file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $way_cloak)) {
             $way_cloak = false;
         } else {
             $cloak = imagecreatefrompng($way_cloak);
@@ -569,7 +574,7 @@ if (isset($_FILES['skin'])) {
 ////Администраторские функции////
 function setstatus($s1)
 {
-    global $donate, $sklrub, $group, $username, $db;
+    global $player_groups, $sklrub, $group, $username, $db;
     list($id, $name) = explode(":", $s1);
     if ($id == 'ban') {
         $time = time();
@@ -577,10 +582,13 @@ function setstatus($s1)
         goodly("Игрок <b>{$name}</b> забанен!");
     }
     $name = ifuser($name);
-    if (!isset($donate[$id])) {
+    if (!isset($player_groups[$id])) {
         badly("Данная группа не существует!");
     }
-    list($n, $p, $d) = explode(':', $donate[$id]);
+    $n = $player_groups[$id]['name'];
+    $p = $player_groups[$id]['price'];
+    $d = $player_groups[$id]['days'];
+
     $db->delete("DELETE from banlist where name='{$name}'");
     upgroup($name, $id);
     if ($id == 0) {
@@ -614,13 +622,15 @@ function addmoney($s1)
 
 function edituser($s1)
 {
-    global $dir, $real, $eco, $donate, $edituserhead, $edituserbody, $db;
+    global $dir, $real, $eco, $player_groups, $edituserhead, $edituserbody, $db;
     ///список статусов///
     $arr = [];
     $s = '';
     $c = '';
-    for ($i = 0, $size = count($donate); $i < $size; ++$i) {
-        list($s2, $s3, $s3) = explode(":", $donate[$i]);
+    for ($i = 0, $size = count($player_groups); $i < $size; ++$i) {
+        $s2 = $player_groups[$i]['name'];
+        $s3 = $player_groups[$i]['price'];
+        $s3 = $player_groups[$i]['days'];
         $s .= '<option value="' . $i . '">' . $s2 . '</option>';
     }
     $q = $db->select("SELECT * from `{$eco['0']}` where `{$eco['1']}` LIKE '{$s1}%%%%' LIMIT 0,50");

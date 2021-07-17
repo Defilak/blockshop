@@ -55,7 +55,7 @@ function get_display_price($product)
                     <center>
                         <b><?= $product['name'] ?></b>
                         <br />
-                        <img src="/<?= "{$dir}{$icons}{$product['image']}" ?>"><br />
+                        <img src="/<?= blockshop_public()."{$icons}{$product['image']}" ?>"><br />
                         <b><?= get_display_price($product) ?> за <?= $product['amount'] ?> шт.</b>
                         <br>Кол-во: <input type="number" style="width:50px;" id="p<?= $product['id'] ?>" onkeyup="this.value=this.value.replace(/[^\d\.]+/g,'');" value="1"> шт.<br />
                         <br>

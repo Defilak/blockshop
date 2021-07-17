@@ -26,12 +26,16 @@ $logs = 'salelog'; ///таблица логов
 
 $icons = 'img/icons/';
 
-$docRoot = getenv("DOCUMENT_ROOT");
 $dir = 'blockshop/'; ///папка с данным скриптом (слэш в конце обязательно)
 
-function blockshop_root($path) {
-    return $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'blockshop'. DIRECTORY_SEPARATOR . $path;
+function blockshop_root($path = '') {
+    return $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'blockshop' . DIRECTORY_SEPARATOR . $path;
 }
+
+function blockshop_public($path = '') {
+    return 'blockshop/' . $path;
+}
+
 
 //таблицы плагинов
 $cart = array('ShopCart', 'player', 'item', 'amount'); ///таблица плагина выдачи вещей(таблица, колонка имени, колонка id-блока, колонка кол-во)
@@ -47,15 +51,39 @@ $eco = [
 ]; ///игровая валюта(таблица, колонка имени, колонка баланса,колонка реальной валюты)
 $real = array('money', 'name', 'money'); ///реальная валюта(таблица, колонка имени, колонка баланса)
 
-$donate = array('Игрок:0:0:0', 'Silver:50:730:0', 'Gold:150:30:1'); ///статусы (название,цена,кол-во дней,возможность загрузки HD)
+
+$player_groups = [
+    [
+        'name' => 'Игрок',
+        'price' => 0,
+        'days' => 0,
+        'hd' => false
+    ],
+    [
+        'name' => 'Silver',
+        'price' => 100,
+        'days' => 0,
+        'hd' => false
+    ],
+    [
+        'name' => 'Gold',
+        'price' => 200,
+        'days' => 30,
+        'hd' => true
+    ],
+];
+
+
+
+
 $s = array('Medieval', 'Imphar'); ///массив серверов(первое по умолчанию)
 $cat = array('Все', 'Блоки', 'Инструменты', 'Еда', 'Оружие', 'Одежда'); ///массив категорий (первое значение выводит все блоки)
 $bans = array('30', '50', '100');
 
-$path_skin = $dir . 'mc/skins/';
-$path_skin_abs = 'mc/skins/';
-$path_cloak = $dir . 'mc/cloaks/';
-$path_cloak_abs = 'mc/cloaks/';
+$path_skin = blockshop_public('mc/skins/');
+$path_skin_abs = blockshop_public('mc/skins/');
+$path_cloak = blockshop_public('mc/cloaks/');
+$path_cloak_abs = blockshop_public('mc/cloaks/');
 
 $shop_id = '6A440C5A-EFA7-DE3D-E250-6DC0B784B6BA'; ///id магазина интеркассы
 $key = 'SaJDLLbhtCTznxLS'; ///ключ интеркассы

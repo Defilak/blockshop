@@ -1,32 +1,11 @@
 <?php
 
-$donate_groups = [
-    [
-        'name' => 'Игрок',
-        'price' => 0,
-        'days' => 0,
-        'hd' => false
-    ],
-    [
-        'name' => 'Silver',
-        'price' => 100,
-        'days' => 0,
-        'hd' => false
-    ],
-    [
-        'name' => 'Gold',
-        'price' => 200,
-        'days' => 30,
-        'hd' => true
-    ],
-];
-
 //получаем статус игрока
 $user_group;
-if (count($donate_groups) > $group) {
-    $user_group = $donate_groups[$group];
+if (count($player_groups) > $group) {
+    $user_group = $player_groups[$group];
 } else {
-    $user_group = $donate_groups[0];
+    $user_group = $player_groups[0];
 }
 
 if ($group == 15) {
@@ -58,7 +37,7 @@ if ($ban) {
 $rand = mt_rand(1, 9999);
 $skin_preview_front = "/{$path_skin}1/char.png";
 $skin_preview_back = "/{$path_skin}2/char.png";
-if (file_exists("{$docRoot}/{$path_skin}{$username}.png")) {
+if (file_exists("{$_SERVER['DOCUMENT_ROOT']}/{$path_skin}{$username}.png")) {
     $skin_preview_front = "/{$path_skin}1/$username.png?$rand";
     $skin_preview_back = "/{$path_skin}2/$username.png?$rand";
 }
@@ -182,8 +161,8 @@ for ($i = 0, $size = $siz3; $i < $size; ++$i) {
 
                 <? } else if ($group == 0) { ?>
 
-                    <? for ($i = 1, $size = count($donate_groups); $i < $size; ++$i) { ?>
-                        <input type="button" value="<?= $donate_groups[$i]['name'] ?> (<?= $donate_groups[$i]['price'] ?>р)" onclick="buygroup('<?= $i ?>');tolc();" class="button">
+                    <? for ($i = 1, $size = count($player_groups); $i < $size; ++$i) { ?>
+                        <input type="button" value="<?= $player_groups[$i]['name'] ?> (<?= $player_groups[$i]['price'] ?>р)" onclick="buygroup('<?= $i ?>');tolc();" class="button">
                     <? } ?>
                     <div style="font-size:10px;"><b><br>1.Покупка осуществляется на один месяц<br>2.Стоимость считывается только с реального счета<br></b></div>
 
