@@ -7,7 +7,6 @@ $route = !empty($post_param) ? $post_param : $get_param; //post in priority
 
 class Router
 {
-
     private static $routes = [];
 
     public static function add($route, $routeData)

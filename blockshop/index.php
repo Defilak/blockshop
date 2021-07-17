@@ -1,6 +1,4 @@
 <?php
-//D:\Workspace\projects\php\blockshop-next\blockshop\class/Database.php
-//D:\Workspace\projects\php\blockshop-next/blockshop/class/Database\Database.php
 
 //define autoloader
 spl_autoload_register(function ($className) {
@@ -10,9 +8,10 @@ spl_autoload_register(function ($className) {
 
 define('BLOCKSHOP', true);
 include_once 'config.php';
-
+include_once 'design.php';
 
 require_once 'router.php';
+
 require_once 'core/check_login.php';
 require_once 'core/check_session.php';
 
@@ -26,12 +25,11 @@ if (is_route('lk')) {
         require_once 'core/controller_lk.php';
     } else {
         require_once 'core/navbar_template.php';
-?>
-        <div id="result" style="float:left;width:100%;margin-top:6px;"></div>
-        <div id="cont" style="width:100%;line-height: 18px;">
-            <? require_once 'core/controller_lk.php'; ?>
-        </div>
-<?
+
+        echo '<div id="result" style="float:left;width:100%;margin-top:6px;"></div>
+        <div id="cont" style="width:100%;line-height: 18px;">';
+        require_once 'core/controller_lk.php';
+        echo '</div>';
     }
 }
 

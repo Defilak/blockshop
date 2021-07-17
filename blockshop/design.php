@@ -17,6 +17,21 @@ function _include_page($name, $args = []) {
 }
 
 
+function _load_template($template, $args = null, $include_header = true) {
+    //check exist template
+    $template_path = blockshop_root('pages/'.$template);
+    if(!file_exists($template_path)) {
+        throw new Exception("Can't find template: " . $template_path);
+    }
+    
+    if (isset($data)) {
+        extract($data);
+    }
+
+    include $template_path;
+}
+
+
 /*Переменные в дизайнах
 {msg}-переменная сообщения
 {name}-название услуги, блока или игрока

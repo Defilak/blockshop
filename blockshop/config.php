@@ -7,6 +7,7 @@ if (!defined('BLOCKSHOP')) {
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+require_once 'exception_handler.php';
 
 session_start();
 global $eco;
@@ -27,6 +28,10 @@ $icons = 'img/icons/';
 
 $docRoot = getenv("DOCUMENT_ROOT");
 $dir = 'blockshop/'; ///папка с данным скриптом (слэш в конце обязательно)
+
+function blockshop_root($path) {
+    return $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'blockshop'. DIRECTORY_SEPARATOR . $path;
+}
 
 //таблицы плагинов
 $cart = array('ShopCart', 'player', 'item', 'amount'); ///таблица плагина выдачи вещей(таблица, колонка имени, колонка id-блока, колонка кол-во)
