@@ -9,10 +9,12 @@ spl_autoload_register(function ($className) {
 define('BLOCKSHOP', true);
 include_once 'config.php';
 include_once 'design.php';
-
 require_once 'router.php';
 
+// Проверка логинится-ли пользователь
 require_once 'core/check_login.php';
+
+// Проверка сессии
 require_once 'core/check_session.php';
 
 // это чтоб ажаксом страницы норм подгружались, шапку не грузим если ажакс

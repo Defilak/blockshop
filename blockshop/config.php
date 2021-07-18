@@ -10,9 +10,8 @@ error_reporting(E_ALL);
 require_once 'exception_handler.php';
 
 session_start();
-global $eco;
 
-////БД магазина///
+// БД магазина
 $mysql_host = 'localhost';
 $mysql_user = 'root';
 $mysql_pass = 'root';
@@ -20,7 +19,6 @@ $mysql_db = 'blockshop';
 $mysql_port = 3306;
 $charset = 'UTF8';
 
-$banlist = 'banlist'; //Стандартная таблица банлиста
 $blocks = 'sale'; //таблица с блоками
 $logs = 'salelog'; ///таблица логов
 
@@ -38,9 +36,9 @@ function blockshop_public($path = '') {
 
 
 //таблицы плагинов
-$cart = array('ShopCart', 'player', 'item', 'amount'); ///таблица плагина выдачи вещей(таблица, колонка имени, колонка id-блока, колонка кол-во)
+$banlist = 'banlist'; //Стандартная таблица банлиста
 
-$table_cart = [
+$table_cart = [ //таблица плагина выдачи вещей(таблица, колонка имени, колонка id-блока, колонка кол-во)
     'table' => 'ShopCart',
     'name' => 'player',
     'item' => 'item',

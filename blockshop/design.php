@@ -16,10 +16,13 @@ function _include_page($name, $args = []) {
     include "pages/{$name}";
 }
 
+function _load_template_var() {
+    
+}
 
-function _load_template($template, $args = null, $include_header = true) {
+function _load_template($template, $data = null, $include_header = true) {
     //check exist template
-    $template_path = blockshop_root('pages/'.$template);
+    $template_path = blockshop_root('pages/'.$template.'.page.php');
     if(!file_exists($template_path)) {
         throw new Exception("Can't find template: " . $template_path);
     }

@@ -32,12 +32,26 @@ class DB
         return $pdo->select($query);
     }
 
+    public function query(string $sql, $params = []): ?array
+    {
+        $pdo = self::getConnection();
+        $sth = $pdo->prepare($sql);
+        $result = $sth->execute($params);
+
+        if (false === $result) {
+            return null;
+        }
+
+        return $sth->fetchAll();
+    }
+
     public static function getConnection()
     {
         if (isset(self::$params) && !isset(self::$pdo)) {
             $args = self::$params;
             self::$pdo = new PDO("mysql:host={$args['host']}:{$args['port']};dbname={$args['db_name']}", $args['user'], $args['password']);
             self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING); //спавнить предупреждения
+            self::$pdo->exec('SET NAMES UTF8');
         }
 
         return self::$pdo;
