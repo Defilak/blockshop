@@ -1,6 +1,17 @@
 <?php
 
-const nominal = 0;
+class User extends ActiveRecordEntity
+{
+    protected $username;
+    protected $password;
+
+    protected static function getTableName(): string {
+        return 'users';
+    }
+}
+
+
+/*const nominal = 0;
 
 class User
 {
