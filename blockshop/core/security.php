@@ -2,50 +2,36 @@
 
 namespace security;
 
-use DB;
-use PDOException;
+use User;
 
-class User
+function has_session(): bool
 {
-    public $username;
-    public $group;
-    public $balance;
-    public $money;
-    public $bancount;
-    public $buys;
-    public $ban;
-
-    private function __construct()
-    {
-
-    }
-
-    public static function get($username)
-    {
-        global $table_economy, $nominal;
-        $stmt = DB::prepare("SELECT * FROM `{$table_economy['table']}` WHERE `{$table_economy['name']}`= :name;");
-        $stmt->bindValue(':name', $username);
-        $stmt->execute();
-
-        //create row if no exists
-        $user = $stmt->fetch();
-        if (empty($user)) {
-            $stmt_insert = DB::prepare("INSERT INTO `{$table_economy['table']}` (id,`{$table_economy['name']}`,`{$table_economy['balance']}`) VALUES (NULL, :name,:nominal);");
-            $stmt_insert->bindValue(':name', $username);
-            $stmt_insert->bindValue(':nominal', $nominal);
-            $stmt_insert->execute();
-
-            //repeat this query
-            $stmt->execute();
-            $user = $stmt->fetch();
-        }
-    }
+    return isset($_SESSION['shopname']);
 }
 
+function user_from_session(): User
+{
+    return User::where('username', $_SESSION['shopname']);
+}
 
-session_start();
+if (!has_session()) {
+    _exit_with_template('auth1');
+}
 
-$UserData = [];
+$user = user_from_session();
+$username = $user->username;
+
+$economy = $user->getEconomy();
+$money = $economy->money;
+$iconomy = $economy->balance;
+$group = $economy->group;
+$bancount = $economy->bancount;
+$buys = $economy->buys;
+$ban = $user->getBanEntry() ? 1 : 0;
+
+
+
+/*$UserData = [];
 
 $username = isset($_SESSION['shopname']) ? $_SESSION['shopname'] : null;
 if ($username != null) {
@@ -94,3 +80,4 @@ if ($username != null) {
     $username = 'Не игрок';
     $group = -1;
 }
+*/

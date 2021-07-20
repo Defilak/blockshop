@@ -32,17 +32,16 @@ class DB
         return $pdo->select($query);
     }
 
-    public function query(string $sql, $params = []): ?array
+    public static function query(string $sql, array $params = [], string $className = 'stdClass'): ?array
     {
-        $pdo = self::getConnection();
-        $sth = $pdo->prepare($sql);
+        $sth = DB::prepare($sql);
         $result = $sth->execute($params);
 
         if (false === $result) {
             return null;
         }
 
-        return $sth->fetchAll();
+        return $sth->fetchAll(\PDO::FETCH_CLASS, $className);
     }
 
     public static function getConnection()

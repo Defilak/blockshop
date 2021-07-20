@@ -34,18 +34,35 @@ class Router
     }
 }
 
-function is_route($route)
+function is_route($route): bool
 {
-    return isset($_POST[$route]);
+    //для легаси
+    if (isset($_POST[$route])) {
+        return true;
+    }
+
+    //для нормисов
+    if ($_SERVER['REQUEST_URI'] == $route) {
+        return true;
+    }
+
+    return false;
 }
 
-function is_not_routes(...$routes) {
-    foreach($routes as $route) {
-        if(is_route($route)) {
+function is_not_routes(...$routes)
+{
+    foreach ($routes as $route) {
+        if (is_route($route)) {
             return false;
         }
     }
     return true;
+}
+
+function redirect_index()
+{
+    header('Location: /');
+    exit;
 }
 
 function redirect_404()
@@ -54,4 +71,5 @@ function redirect_404()
     header('HTTP/1.1 404 Not Found');
     header("Status: 404 Not Found");
     header('Location:' . $host . '404');
+    exit;
 }

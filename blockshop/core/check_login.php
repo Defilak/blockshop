@@ -1,8 +1,33 @@
 <?php
+//технически - это контроллер /auth
+namespace route\auth;
 
-namespace auth;
+use User;
 
-use DB;
+
+//если отослана форма
+if (isset($_POST['username']) && isset($_POST['password'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    if (preg_match('/^[a-zA-Z0-9_-]+$/', $username) && preg_match('/^[a-zA-Z0-9_-]+$/', $password)) {
+        $user = User::whereFirst([
+            'username' => $username,
+            'hash' => sha1($password)
+        ]);
+
+        if (!empty($user)) {
+            $_SESSION['shopname'] = $username;
+            redirect_index();
+        }
+    } 
+    
+    _exit_with_template('auth1', ['error_message' => 'Неверный логин или пароль!']);
+}
+
+
+/*use DB;
+use User;
 
 function is_valid_field($field)
 {
@@ -26,12 +51,6 @@ function check_user_exists($username, $password)
     return false;
 }
 
-function redirect_to_index()
-{
-    header('Location: /');
-    exit;
-}
-
 //todo: форму показывать на любой странице если нет сессии, но запрос всегда на /auth
 //if route /auth
 if ($_SERVER['REQUEST_URI'] == '/auth') {
@@ -42,6 +61,7 @@ if ($_SERVER['REQUEST_URI'] == '/auth') {
 
     //если отослана форма
     if (isset($_POST['username']) && isset($_POST['password'])) {
+        
         $user_data = check_user_exists($_POST['username'], $_POST['password']);
 
         if (!$user_data) {
@@ -54,7 +74,7 @@ if ($_SERVER['REQUEST_URI'] == '/auth') {
         _load_template('auth1');
         exit;
     }
-}
+}*/
 
 /*function correct_user_fields($username, $password)
 {

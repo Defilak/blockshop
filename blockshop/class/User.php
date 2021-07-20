@@ -2,10 +2,21 @@
 
 class User extends ActiveRecordEntity
 {
-    protected $username;
-    protected $password;
+    public $username;
+    public $hash;
 
-    protected static function getTableName(): string {
+    public function getEconomy(): Economy
+    {
+        return Economy::where('username', $this->username);
+    }
+
+    public function getBanEntry(): ?Banlist
+    {
+        return Banlist::where('name', $this->username);
+    }
+
+    protected static function getTableName(): string
+    {
         return 'users';
     }
 }

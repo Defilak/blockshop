@@ -34,6 +34,11 @@ function _load_template($template, $data = null, $include_header = true) {
     include $template_path;
 }
 
+function _exit_with_template($template, $data = null, $include_header = true) {
+    _load_template($template, $data, $include_header);
+    exit;
+}
+
 
 /*Переменные в дизайнах
 {msg}-переменная сообщения
