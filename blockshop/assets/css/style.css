@@ -12,6 +12,14 @@ body {
 .imgbtn {
     transition: all 0.2s ease-in-out;
 }
+
 .imgbtn:hover {
     transform: scale(1.1);
+}
+
+.slcon .item {
+    height: 300px;
+    display: flex;
+    flex-wrap: wrap;
+    overflow: auto;
 }

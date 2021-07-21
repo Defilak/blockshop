@@ -4,32 +4,22 @@ if (!defined('BLOCKSHOP')) {
     die("HACKING");
 }
 
-global $q1;
-
-
-
-
 function enchments()
 {
-    global $server_names, $enchs;
-    $asd = '';
-    //select for enchantments
-    for ($i = 0, $size = count($enchs); $i < $size; ++$i) {
-        [$a, $b] = explode(":", $enchs[$i]);
-        $asd .= '<option value="' . $a . '">' . $b . '</option>';
+    global $enchs;
+    $template = '';
+    for ($i = 0; $i < count($enchs); $i++) {
+        [$code, $name] = explode(':', $enchs[$i]);
+        $template = "<option value=\"$code\">$name</option>";
     }
-
-    return $asd;
+    return $template;
 }
 
-
-////функции///
 function servlist()
 {
     global $server_names;
-    $siz = count($server_names);
     $l = '';
-    for ($i = 0, $size = $siz; $i < $size; ++$i) {
+    for ($i = 0, $size = count($server_names); $i < $size; ++$i) {
         $l .= '<option value="' . $i . '">' . $server_names[$i] . '</option>';
     }
     return $l;
@@ -38,20 +28,19 @@ function servlist()
 function catlist()
 {
     global $cat;
-    $siz = count($cat);
     $l = '';
-    for ($i = 0, $size = $siz; $i < $size; ++$i) {
+    for ($i = 0, $size = count($cat); $i < $size; ++$i) {
         $l .= '<option value="' . $i . '">' . $cat[$i] . '</option>';
     }
     return $l;
 }
 
-function bal($s1, $s2)
+/*function bal($s1, $s2)
 {
     global $q1;
     $q = mysqli_fetch_assoc($q1);
     return $q[$s2];
-}
+}*/
 
 function skl($n, $s1)
 {

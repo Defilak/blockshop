@@ -11,22 +11,24 @@ $_template_auth = '
 ';
 
 
-function _include_page($name, $args = []) {
+function _include_page($name, $args = [])
+{
     $params = $args;
     include $name;
 }
 
-function _load_template_var() {
-    
+function _load_template_var()
+{
 }
 
-function _load_template($template, $data = null, $include_header = true) {
+function _load_template($template, $data = null, $include_header = true)
+{
     //check exist template
-    $template_path = blockshop_root('views/'.$template.'.page.php');
-    if(!file_exists($template_path)) {
+    $template_path = blockshop_root('views/' . $template . '.page.php');
+    if (!file_exists($template_path)) {
         throw new Exception("Can't find template: " . $template_path);
     }
-    
+
     if (isset($data)) {
         extract($data);
     }
@@ -34,7 +36,8 @@ function _load_template($template, $data = null, $include_header = true) {
     include $template_path;
 }
 
-function _exit_with_template($template, $data = null, $include_header = true) {
+function _exit_with_template($template, $data = null, $include_header = true)
+{
     _load_template($template, $data, $include_header);
     exit;
 }
@@ -72,14 +75,14 @@ $mess = '<center><div class="mess {type}" id="shopmsg">{msg}</div></center>';
 </div>
 ';*/
 
-$headdesign='
+$headdesign = '
 <div style="width:100%;float:left;">
     {servdesign}
     {user}
 </div>
 ';
 
-$servdesign='
+$servdesign = '
     <div id="serverlist" style="float:left;">
         <select id="server" class="svlist" onchange="toserver();" title="Выберите сервер">{srv}</select> 
         <select id="category" class="svlist" onchange="toserver();" title="Выберите категорию">{cats}</select> 
@@ -105,7 +108,7 @@ $shopdesign = '<div id="m{id}" class="presale"><div class="button" title="{info}
 	<b>{money} за {amount} шт.</b><br>Кол-во: <input type="number" style="width:50px;" id="p{id}" onkeyup="this.value=this.value.replace(/[^\d\.]+/g,\'\');" value="1"> шт.<br />
     <br><input type="button" class="button" value="Купить" onclick="buy(\'{id}\');" style="width:50%"></center></div></div>';
 ///дизайн ЛК///
-$kabdesign='
+$kabdesign = '
 <div class="block personal_data">
     <div class="jaw personal_data_jaw">Личные данные</div>
     <div class="content personal_data_content">
@@ -199,9 +202,9 @@ $perevod = '<input type="number" class="svlist" onkeyup="this.value=this.value.r
 $perevod2 = '<input type="text" class="svlist" id="pt1" placeholder="Ник игрока"> <input type="number" class="svlist" onkeyup="this.value=this.value.replace(/[^\d\.]+/g,\'\');" id="pt2" placeholder="Сумма"> <select class="svlist" id="pt3"><option value="1">Реальная валюта</option><option value="0">Игровая валюта</option> <input type="button" class="button" value="Перевести" onclick="perevod();">';
 $prefix = '<select id="prefcol" onchange="prefixview();" class="button"><option value="0">Цвет префикса</option>{clr}</select> <input id="pref" class="button" placeholder="Префикс"> <select id="nickcol" class="button"><option value="0">Цвет ника</option>{clr}</select> <select id="suffcol" class="button"><option value="0">Цвет текста</option>{clr}</select> <input type="button" class="button" value="Сменить" onclick="changeprefix();"> <input type="hidden" id="prefixview">';
 ///сообщения под статусами///
-$pokupka='<div style="font-size:10px;"><b><br>1.Покупка осуществляется на один месяц<br>2.Стоимость считывается только с реального счета<br></b></div>';
-$prodlenie='<div style="font-size:10px;"><b><br>1.Продление осуществляется один 1 месяц<br>2.Продление услуги стоит на 30% дешевле.<br>3.При отказе от услуги на ваш счет вернется 50% суммы (пропорционально оставшимся дням)</b></div>';
-$unban='<div style="font-size:10px;"><b><br>1.Разбан переводит вас в группу игрок, аннулируя премиум статус (если был)<br>2.После разбана у вас аннулируется количество покупок</b></div>';
+$pokupka = '<div style="font-size:10px;"><b><br>1.Покупка осуществляется на один месяц<br>2.Стоимость считывается только с реального счета<br></b></div>';
+$prodlenie = '<div style="font-size:10px;"><b><br>1.Продление осуществляется один 1 месяц<br>2.Продление услуги стоит на 30% дешевле.<br>3.При отказе от услуги на ваш счет вернется 50% суммы (пропорционально оставшимся дням)</b></div>';
+$unban = '<div style="font-size:10px;"><b><br>1.Разбан переводит вас в группу игрок, аннулируя премиум статус (если был)<br>2.После разбана у вас аннулируется количество покупок</b></div>';
 ///дизайн истории///
 $historydesign = '<div style="width:100%;height:35px;float:left;"><div style="width:10%;float:left;height:32px;"></div><div style="float:left;width:10%;"><img src="/{dir}{icons}{img}"></div><div style="float:left;width:25%;margin-top:7px;"><b>{name}</b></div><div style="float:left;width:25%;margin-top:7px;"><b>{info}</b></div><div style="float:left;width:25%;margin-top:7px;"><b>{date}</b></div></div>';
 ///дизайн корзины///
@@ -214,9 +217,12 @@ $edituserbody = '<tr class="tfoot"><th colspan="5"><div class="hr_line"></div></
 	<td><input type="number" onchange="ajaxfunc(\'addmoney=0:\'+this.value+\':{name}\')" value="{icon}"></td>
 	<td><select id="changegroup" onchange="ajaxfunc(\'setstatus=\'+this.value+\':{name}\')">{opt}</select></td>
 	<td>{bans}</td><td>{buys}</td></tr><tr class=""><td background="/{dir}img/line.gif" height="1" colspan="6"></td></tr>';
-$admlist = '<div id="ach"><input type=radio name="image" id="{img}" value="{img}" onChange="javascript: doIcon( this.value );"><label for="{img}"><img src="/{dir}{icons}{img}"></label></div>';
+
+    
+$admlist = '<div id="ach"><input type=radio name="image" id="{img}" value="{img}" onChange="javascript: doIcon( this.value );"><label for="{img}"><img src="/{icons}{img}"></label></div>';
+
 $admbox = '<div id="img_box" style="width: 36px;height:36px;background-image: url(/{dir}{icons}{img}); background-position: 50% 50%; background-repeat: no-repeat no-repeat;"></div><input type=hidden id="b1" value="{img}" style="display:none">';
-$admcont='<center><p>Выберите картинку блока:<br><div class="button" style="height:auto"><div class="slcon"><div class="item">{imglist}</div></div></div><br>Текущая картинка блока:<br>{f1}
+$admcont = '<center><p>Выберите картинку блока:<br><div class="button" style="height:auto"><div class="slcon"><div class="item">{imglist}</div></div></div><br>Текущая картинка блока:<br>{f1}
 	<div class="field">
 	ID блока:<br /><input type="text" class="form" pattern="[0-9\.\:]*" id="b2" value="{f2}" required><br>
 	Название:<input type="text" class="form" id="b3" value="{f3}" required><br />
@@ -227,4 +233,3 @@ $admcont='<center><p>Выберите картинку блока:<br><div class
 	</div><div class="field">
 	Генератор enchant\'ов:<br /><input type="number" style="width:30%" class="form" id="ench2" value="1"><select id="ench1" onchange="addench();" class="form" style="width:60%">{ench}</select><br>
 	Id всех чар:<br /><input type="text" class="form" style="width:60%" id="ench3" name="0" value="0" ><input type="button" class="form" style="width:30%" value="Наложить" onclick="addench2()"><br /></div></p></center>';
-?>
