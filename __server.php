@@ -9,4 +9,13 @@ if (preg_match('/\.(?:png|jpg|jpeg|gif|css|ico|js)$/', $fiximgqueryroute[0])) {
     return false;    // сервер возвращает файлы напрямую.
 }
 
-include_once 'index.php';
+if($_SERVER['REQUEST_URI'] === '/') {
+    include_once 'index.php';
+    exit;
+}
+
+if (file_exists(dirname(__FILE__).$_SERVER['REQUEST_URI'])) {
+    include_once dirname(__FILE__).$_SERVER['REQUEST_URI'];
+} else {
+    exit('404');
+}

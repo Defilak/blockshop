@@ -8,7 +8,7 @@ spl_autoload_register(function ($className) {
 
 define('BLOCKSHOP', true);
 require_once 'config.php';
-require_once 'design.php';
+require_once 'views/design.php';
 require_once 'router.php';
 
 
@@ -27,7 +27,12 @@ if (is_not_routes('shop', 'lk', 'banlist')) {
 
 if (is_route('lk')) {
     if ($_POST['lk'] == 0) {
+        //require_once 'core/controller_lk.php';
+        
+        echo '<div id="result" style="float:left;width:100%;margin-top:6px;"></div>
+        <div id="cont" style="width:100%;line-height: 18px;">';
         require_once 'core/controller_lk.php';
+        echo '</div>';
     } else {
         require_once 'core/navbar_template.php';
 

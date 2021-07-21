@@ -56,6 +56,7 @@ function addench2() {
     var top1 = document.getElementById("b2");
     top1.value = top1.value + "-" + top;
 }
+
 var eco = document.getElementById("changeval");
 function valuta() {
     var div = document.getElementById("changeval");
@@ -65,9 +66,10 @@ function valuta() {
         div.value--;
     }
     div.title = post2(div.value);
-    var img = url3 + "img/" + div.value + ".png";
+    var img = url3 + "assets/img/" + div.value + ".png";
     div.src = img;
 }
+
 var req;
 function createRequest() {
     if (window.XMLHttpRequest) req = new XMLHttpRequest();

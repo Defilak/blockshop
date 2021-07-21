@@ -18,7 +18,11 @@
 <body>
     <div class="container">
         <?php
-        require_once 'blockshop/index.php';
+            if($include_header) {
+                include_once '../core/navbar_template.php';
+            }
+
+            require_once $template;
         ?>
     </div>
 </body>

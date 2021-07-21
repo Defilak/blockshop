@@ -45,7 +45,7 @@ $_POST['lk'] = 1;
         <? if (isset($group)) { ?>
             <div class="d-flex">
                 <? foreach ($actions as $action) { ?>
-                    <input src="/<?= $dir . 'img/' . $action['img'] ?>.png" onclick="<?= $action['onclick'] ?>" title="<?= $action['title'] ?>" type="image" class="imgbtn m-1" <?= $action['img'] === '0' ? 'id="changeval" value="0"' : '' ?> />
+                    <input src="/<?= $dir . 'assets/img/' . $action['img'] ?>.png" onclick="<?= $action['onclick'] ?>" title="<?= $action['title'] ?>" type="image" class="imgbtn m-1" <?= $action['img'] === '0' ? 'id="changeval" value="0"' : '' ?> />
                 <? } ?>
             </div>
         <? } ?>

@@ -22,9 +22,10 @@ $charset = 'UTF8';
 $blocks = 'sale'; //таблица с блоками
 $logs = 'salelog'; ///таблица логов
 
-$icons = 'img/icons/';
-
 $dir = 'blockshop/'; ///папка с данным скриптом (слэш в конце обязательно)
+
+$icons = $dir.'assets/img/icons/';
+
 
 function blockshop_root($path = '') {
     return $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'blockshop' . DIRECTORY_SEPARATOR . $path;

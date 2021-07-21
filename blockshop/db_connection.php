@@ -7,6 +7,7 @@ if (!defined('BLOCKSHOP')) {
 // Подключение к mysqli
 require_once 'lib/class.simpleDB.php';
 require_once 'lib/class.simpleMysqli.php';
+require_once 'class/DB.php';
 
 $mysqli_settings = array(
     'server' => $mysql_host,

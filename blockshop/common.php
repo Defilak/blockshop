@@ -21,11 +21,11 @@ for ($i = 0, $size = $siz; $i < $size; ++$i) {
 ////функции///
 function servlist()
 {
-    global $s;
-    $siz = count($s);
+    global $server_names;
+    $siz = count($server_names);
     $l = '';
     for ($i = 0, $size = $siz; $i < $size; ++$i) {
-        $l .= '<option value="' . $i . '">' . $s[$i] . '</option>';
+        $l .= '<option value="' . $i . '">' . $server_names[$i] . '</option>';
     }
     return $l;
 }

@@ -3,7 +3,7 @@
 define('BLOCKSHOP', true);
 include 'config.php';
 
-include 'design.php';
+include 'views/design.php';
 
 ///вводим глобальную защиту от sql-инъекций)))))
 foreach ($_POST as $name => $value) {

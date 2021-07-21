@@ -69,13 +69,13 @@ for ($i = 0, $size = $siz3; $i < $size; ++$i) {
                 </div>
 
                 <button class="button">Выбрать скин
-                    <form enctype="multipart/form-data" method="post" target="skinframe" action="http://localhost/auth/webpart/blockshop/ajaxbuy.php" id="skinform" onsubmit="return false;">
+                    <form enctype="multipart/form-data" method="post" target="skinframe" action="<?=blockshop_public('ajaxbuy.php')?>" id="skinform" onsubmit="return false;">
                         <input type="file" accept="image/png" name="skin" id="file" onchange="upskin();" style="margin-top: -20px;margin-left: -5px;font-size: 18px;width: 150px; height: 30px;opacity: 0;">
                     </form>
                 </button>
                 <br>
                 <button class="button">Выбрать плащ
-                    <form enctype="multipart/form-data" method="post" target="skinframe" action="http://localhost/auth/webpart/blockshop/ajaxbuy.php" id="cloackform" onsubmit="return false;">
+                    <form enctype="multipart/form-data" method="post" target="skinframe" action="<?=blockshop_public('ajaxbuy.php')?>" id="cloackform" onsubmit="return false;">
                         <input type="file" accept="image/png" name="cloak" id="file" onchange="upcloack();" style="margin-top: -20px;margin-left: -5px;font-size: 18px;width: 150px; height: 30px;opacity: 0;">
                     </form>
                 </button>
