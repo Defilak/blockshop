@@ -1,8 +1,6 @@
 <script type="text/javascript">
 var url1 = '/<?= $dir ?>ajaxbuy.php'; var url2 = '/<?= $dir ?>index.php'; var url3 = '/<?= $dir ?>';
 </script>
-<script type="text/javascript" src="/<?= $dir ?>shop.js"></script>
-<!--<link rel="stylesheet" type="text/css" href="/<?= $dir ?>shop.css" />-->
 <?
 $actions = [
     ['title' => 'Перейти в Магазин блоков', 'img' => 'shop', 'onclick' => 'setbanlistF();toserver(); '],
