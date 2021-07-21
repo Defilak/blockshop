@@ -4,19 +4,24 @@ if (!defined('BLOCKSHOP')) {
     die("HACKING");
 }
 
-$siz = count($server_names);
-$siz2 = count($enchs);
+global $q1;
 
-global $asd, $serv, $cats, $q1;
 
-for ($i = 0, $size = $siz2; $i < $size; ++$i) {
-    list($a, $b) = explode(":", $enchs[$i]);
-    $asd .= '<option value="' . $a . '">' . $b . '</option>';
+
+
+function enchments()
+{
+    global $server_names, $enchs;
+    $asd = '';
+    //select for enchantments
+    for ($i = 0, $size = count($enchs); $i < $size; ++$i) {
+        [$a, $b] = explode(":", $enchs[$i]);
+        $asd .= '<option value="' . $a . '">' . $b . '</option>';
+    }
+
+    return $asd;
 }
 
-for ($i = 0, $size = $siz; $i < $size; ++$i) {
-    $serv .= '<option value="' . $i . '">' . $server_names[$i] . '</option>';
-}
 
 ////функции///
 function servlist()

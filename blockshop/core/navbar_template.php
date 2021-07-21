@@ -20,7 +20,7 @@ if ($group == 15) {
     );
 }
 
-
+$cats = '';
 $siz1 = count($cat);
 for ($i = 0, $size = $siz1; $i < $size; ++$i) {
     $cats .= '<option value="' . $i . '">' . $cat[$i] . '</option>';
@@ -34,7 +34,7 @@ $_POST['lk'] = 1;
 
         <? if ($group != -1) { ?>
             <div class="d-flex">
-                <select id="server" class="form-select form-select-sm me-2" onchange="toserver();" title="Выберите сервер"><?= $serv ?></select>
+                <select id="server" class="form-select form-select-sm me-2" onchange="toserver();" title="Выберите сервер"><?= servlist() ?></select>
                 <select id="category" class="form-select form-select-sm me-2" onchange="toserver();" title="Выберите категорию"><?= $cats ?></select>
                 <input id="usercheck" class="form-control form-select-sm me-2" type="text" value placeholder="Кому берем?">
             </div>

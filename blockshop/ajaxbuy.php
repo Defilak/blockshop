@@ -689,7 +689,7 @@ function edit($s1)
 
 function admin($s1)
 {
-    global $dir, $blocks, $admlist, $admbox, $admcont, $db, $asd, $icons;
+    global $dir, $blocks, $admlist, $admbox, $admcont, $db, $icons;
     if (!ctype_digit($s1)) {
         badly("Неверно заполнено одно из полей!");
     }
@@ -727,7 +727,7 @@ function admin($s1)
         $f8 = "0";
     }
     $search = array('{f1}', '{f2}', '{f3}', '{f4}', '{f5}', '{f6}', '{f7}', '{f8}', '{imglist}', '{serv}', '{cats}', '{ench}');
-    $replace = array($f1, $f2, $f3, $f4, $f5, $f6, $f7, $f8, $imglist, $serv, $cats, $asd);
+    $replace = array($f1, $f2, $f3, $f4, $f5, $f6, $f7, $f8, $imglist, $serv, $cats, enchments());
     $c .= str_replace($search, $replace, $admcont);
     die($c);
 }
