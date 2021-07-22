@@ -23,3 +23,11 @@ body {
     flex-wrap: wrap;
     overflow: auto;
 }
+
+#ach input {
+    display:none;
+}
+
+#ach input:checked + label  {
+    background-color:gray;
+}

@@ -35,7 +35,7 @@ function doIcon(s1) {
     var div = document.getElementById("img_box");
     var div1 = document.getElementById("b1");
     var div2 = document.getElementById("b2");
-    var img = url3 + "images/" + s1;
+    var img = url3 + "assets/img/icons/" + s1;
     div.style.background = "url( '" + img + "') no-repeat center";
     div1.value = s1;
     if (s1 != s1.split("_")[0]) {

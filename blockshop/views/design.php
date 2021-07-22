@@ -218,10 +218,11 @@ $edituserbody = '<tr class="tfoot"><th colspan="5"><div class="hr_line"></div></
 	<td><select id="changegroup" onchange="ajaxfunc(\'setstatus=\'+this.value+\':{name}\')">{opt}</select></td>
 	<td>{bans}</td><td>{buys}</td></tr><tr class=""><td background="/{dir}img/line.gif" height="1" colspan="6"></td></tr>';
 
-    
+
 $admlist = '<div id="ach"><input type=radio name="image" id="{img}" value="{img}" onChange="javascript: doIcon( this.value );"><label for="{img}"><img src="/{icons}{img}"></label></div>';
 
-$admbox = '<div id="img_box" style="width: 36px;height:36px;background-image: url(/{dir}{icons}{img}); background-position: 50% 50%; background-repeat: no-repeat no-repeat;"></div><input type=hidden id="b1" value="{img}" style="display:none">';
+$admbox = '<div id="img_box" style="width: 36px;height:36px;background-image: url(/{icons}{img}); background-position: 50% 50%; background-repeat: no-repeat no-repeat;"></div><input type=hidden id="b1" value="{img}" style="display:none">';
+
 $admcont = '<center><p>Выберите картинку блока:<br><div class="button" style="height:auto"><div class="slcon"><div class="item">{imglist}</div></div></div><br>Текущая картинка блока:<br>{f1}
 	<div class="field">
 	ID блока:<br /><input type="text" class="form" pattern="[0-9\.\:]*" id="b2" value="{f2}" required><br>
