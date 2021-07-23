@@ -20,11 +20,10 @@ $stmt->bindValue(':username', $username);
 $stmt->bindValue(':permission', "group-{$user_group['name']}-until");
 $stmt->execute();
 
+$until = 'Навсегда';
 $res = $stmt->fetch();
-if (empty($res)) {
-    $until = 'Навсегда';
-} else {
-    $until = 'До ' . date('j.m.Y H:i:s', $until);
+if(!empty($res)) {
+    $until = 'До ' . date('j.m.Y H:i:s', $res['value']);
 }
 
 
@@ -49,6 +48,7 @@ if (file_exists("{$_SERVER['DOCUMENT_ROOT']}/{$path_skin}{$username}.png")) {
     '5:#bf00bf:Темно-розовый', '6:#bfbf00:Цвет поноса', '7:#bfbfbf:Серый', '8:#404040:Темно-серый', '9:#4040ff:Синий', 'a:#40ff40:Светло-зеленый',
     'b:#40ffff:Голубой', 'c:#ff4040:Красный', 'd:#ff40ff:Розовый', 'e:#ffff40:Желтый', 'f:#ffffff:',
 );*/
+
 $siz3 = count($clrs);
 $color = '';
 for ($i = 0, $size = $siz3; $i < $size; ++$i) {
@@ -56,10 +56,12 @@ for ($i = 0, $size = $siz3; $i < $size; ++$i) {
     $color .= '<option value="' . $a . '"  style="background:' . $b . ';">' . $c . '</option>';
 }
 
+
 _exit_with_template('cabinet', [
     'skin_preview_front' => $skin_preview_front,
     'skin_preview_back' => $skin_preview_back,
     'money' => $money,
+    'exchangeFactor ' => skl($exchangeFactor, $skleco),
     'iconomy' => $iconomy,
     'sklrub' => $sklrub,
     'skleco' => $skleco,
@@ -72,6 +74,6 @@ _exit_with_template('cabinet', [
     'ban' => $ban,
     'bancount' => $bancount,
     'bans' => $bans,
-    'koff ' => 100
+    'player_groups' => $player_groups
 
 ]);

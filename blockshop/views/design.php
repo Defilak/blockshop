@@ -33,6 +33,7 @@ function _load_template($template, $data = null, $include_header = true)
         extract($data);
     }
 
+    global $exchangeFactor;
     include $template_path;
 }
 

@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card user-info-card height-100">
     <div class="card-header">
         Личные данные
     </div>
@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <div class="info-block d-flex justify-content-center flex-grow-1 ms-3">
+        <div class="info-block d-flex justify-content-center align-items-center flex-grow-1 ms-3">
             <table class="table">
                 <tr>
                     <td>Логин:</td>

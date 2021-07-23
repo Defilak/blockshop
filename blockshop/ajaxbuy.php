@@ -320,7 +320,7 @@ function perevod($s1)
 ///перевод реальной валюты в игровую///
 function toeco($s1)
 {
-    global $username, $money, $skleco, $sklrub, $koff;
+    global $username, $money, $skleco, $sklrub, $exchangeFactor;
     if ($s1 > 200) {
         badly("Слишком большая сумма для перевода!");
     }
@@ -330,7 +330,7 @@ function toeco($s1)
     if ($money < $s1) {
         badly("Недостаточно средств для перевода!");
     }
-    $s2 = $s1 * $koff;
+    $s2 = $s1 * $exchangeFactor;
     upbalance($username, "-" . $s1, '1');
     upbalance($username, "+" . $s2, '0');
     $skl1 = skl($s1, $sklrub);

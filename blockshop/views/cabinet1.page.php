@@ -123,7 +123,7 @@
         <br>
         <div class="block transfer_donat_block">
             <div class="jaw transfer_donat_jaw">
-                Перевод из реальной валюты в игровую (1 рубль = <?= skl(100/**$koff */, $skleco) ?>)
+                Перевод из реальной валюты в игровую (1 рубль = <?=$exchangeFactor?><?= skl($exchangeFactor, $skleco) ?>)
             </div>
             <div class="content transfer_donat_content">
                 <input type="number" class="svlist" onkeyup="this.value=this.value.replace(/[^\d\.]+/g,'');" id="sumz" placeholder="Сумма в рублях">

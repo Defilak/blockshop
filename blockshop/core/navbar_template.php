@@ -1,5 +1,7 @@
 <script type="text/javascript">
-var url1 = '/<?= $dir ?>ajaxbuy.php'; var url2 = '/<?= $dir ?>index.php'; var url3 = '/<?= $dir ?>';
+    var url1 = '/<?= $dir ?>ajaxbuy.php';
+    var url2 = '/<?= $dir ?>index.php';
+    var url3 = '/<?= $dir ?>';
 </script>
 <?
 $actions = [

@@ -11,7 +11,7 @@
             <? } ?>
         </div>
 
-        <? if ($ban != 1) { ?>
+        <? if (!$ban) { ?>
             <div class="col-6">
                 <? include 'cabinet/exchange_money.block.php' ?>
                 <? include 'cabinet/give_money_to_player.block.php' ?>
@@ -23,7 +23,4 @@
             </div>
         <? } ?>
     <? } ?>
-</div>
-<div class="row">
-
 </div>

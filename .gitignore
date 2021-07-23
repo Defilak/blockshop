@@ -1,7 +1,4 @@
-
-blockshop/logs
-
-blockshop/assets/img
+blockshop/assets/img/icons/*
 blockshop/assets/css/junk.css
-blockshop/assets/css/style.css
 blockshop/assets/css/style.css.map
+blockshop/assets/css/style.css
