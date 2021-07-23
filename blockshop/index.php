@@ -29,15 +29,13 @@ if (is_route('lk')) {
     if ($_POST['lk'] == 0) {
         //require_once 'core/controller_lk.php';
         
-        echo '<div id="result" style="float:left;width:100%;margin-top:6px;"></div>
-        <div id="cont" style="width:100%;line-height: 18px;">';
+        echo '<div id="result"></div><div id="cont">';
         require_once 'core/controller_lk.php';
         echo '</div>';
     } else {
         require_once 'core/navbar_template.php';
 
-        echo '<div id="result" style="float:left;width:100%;margin-top:6px;"></div>
-        <div id="cont" style="width:100%;line-height: 18px;">';
+        echo '<div id="result"></div><div id="cont">';
         require_once 'core/controller_lk.php';
         echo '</div>';
     }
