@@ -810,7 +810,12 @@ function infly($s1)
 function inlog($s1, $s2)
 {
     global $username;
-    file_put_contents('logs/' . $s1, '[' . date("d/m/Y H:i:s", time()) . '][' . $username . '][' . $_SERVER['REMOTE_ADDR'] . ']=>' . $s2 . "\n", FILE_APPEND);
+
+    if(!is_dir(blockshop_root('logs'))) {
+        mkdir(blockshop_root('logs'));
+    }
+
+    file_put_contents(blockshop_root('logs/') . $s1, '[' . date("d/m/Y H:i:s", time()) . '][' . $username . '][' . $_SERVER['REMOTE_ADDR'] . ']=>' . $s2 . "\n", FILE_APPEND);
 }
 
 function inbdlog($s1)
