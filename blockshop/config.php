@@ -12,12 +12,13 @@ require_once 'exception_handler.php';
 session_start();
 
 // БД магазина
-$mysql_host = 'localhost';
-$mysql_user = 'root';
-$mysql_pass = 'root';
-$mysql_db = 'blockshop';
-$mysql_port = 3306;
-$charset = 'UTF8';
+$db_config = config('database');
+$mysql_host = $db_config['host'];
+$mysql_user = $db_config['username'];
+$mysql_pass = $db_config['password'];
+$mysql_db = $db_config['db'];
+$mysql_port = $db_config['port'];
+$charset = $db_config['charset'];
 
 $blocks = 'sale'; //таблица с блоками
 $logs = 'salelog'; ///таблица логов
