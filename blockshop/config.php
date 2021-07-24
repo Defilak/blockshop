@@ -14,7 +14,7 @@ spl_autoload_register(function ($className) {
     include_once $_SERVER['DOCUMENT_ROOT'] . '/blockshop/class/' . $className . '.php';
 });
 
-require_once 'exception_handler.php';
+require_once 'core/exception_handler.php';
 require_once 'config/config.php';
 
 session_start();
