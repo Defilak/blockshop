@@ -1,16 +1,5 @@
 <?php
 
-$_template_auth = '
-<form method="post" target="/auth">
-Логин<br>
-    <input type="text" name="login" value="">
-    <br>Пароль<br>
-    <input type="password" name="pass"><br>
-    <input class="button" type="submit" value="Вход">
-</form>
-';
-
-
 function _include_page($name, $args = [])
 {
     $params = $args;
@@ -19,6 +8,7 @@ function _include_page($name, $args = [])
 
 function _load_template_var()
 {
+    
 }
 
 function _load_template($template, $data = null, $include_header = true)
@@ -56,26 +46,9 @@ function _exit_with_template($template, $data = null, $include_header = true)
 {amount}-кол-во
 {srv}-сервер
 */
-$error = '
-<div class="block">
-    <div class="jaw">Ошибка</div>
-    <div class="content"><b>Авторизируйтесь для просмотра данной страницы</b></div>
-</div>
-';
 ///сообщения об удаче/ошибке///
 //$mess = '<center><div class="mess {type}" id="shopmsg">{msg}</div></center>';
 
-///дизайн главной страницы///
-/*$headdesign='
-<div style="width:100%;float:left;">
-    <div id="serverlist" style="float:left;">
-        <select id="server" class="svlist" onchange="toserver();" title="Выберите сервер">{srv}</select> 
-        <select id="category" class="svlist" onchange="toserver();" title="Выберите категорию">{cats}</select> 
-        <input type="text" class="svlist" style="padding:6px;" id="usercheck" value placeholder="Кому берем?">
-    </div>
-    {user}
-</div>
-';*/
 
 $headdesign = '
 <div style="width:100%;float:left;">
