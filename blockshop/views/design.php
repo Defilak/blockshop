@@ -207,7 +207,16 @@ $pokupka = '<div style="font-size:10px;"><b><br>1.Покупка осущест�
 $prodlenie = '<div style="font-size:10px;"><b><br>1.Продление осуществляется один 1 месяц<br>2.Продление услуги стоит на 30% дешевле.<br>3.При отказе от услуги на ваш счет вернется 50% суммы (пропорционально оставшимся дням)</b></div>';
 $unban = '<div style="font-size:10px;"><b><br>1.Разбан переводит вас в группу игрок, аннулируя премиум статус (если был)<br>2.После разбана у вас аннулируется количество покупок</b></div>';
 ///дизайн истории///
-$historydesign = '<div style="width:100%;height:35px;float:left;"><div style="width:10%;float:left;height:32px;"></div><div style="float:left;width:10%;"><img src="/{dir}{icons}{img}"></div><div style="float:left;width:25%;margin-top:7px;"><b>{name}</b></div><div style="float:left;width:25%;margin-top:7px;"><b>{info}</b></div><div style="float:left;width:25%;margin-top:7px;"><b>{date}</b></div></div>';
+$historydesign = '
+<div style="width:100%;height:35px;float:left;">
+<div style="width:10%;float:left;height:32px;"></div>
+<div style="float:left;width:10%;">
+<img src="/{icons}{img}"></div>
+<div style="float:left;width:25%;margin-top:7px;">
+<b>{name}</b>
+</div>
+<div style="float:left;width:25%;margin-top:7px;"><b>{info}</b></div><div style="float:left;width:25%;margin-top:7px;"><b>{date}</b></div>
+</div>';
 ///дизайн корзины///
 $cartdesign = '<div class="presale" style="width:20%;"><div class="button" style="height:100px;margin:2px;font-size:10px;"><input type="button" onclick="delblock(\'{id}:{srv}\');" class="ud uk" title="Отказаться от покупки"><center><b>{name}<br /><img src="/{dir}{icons}{img}"><br>{amount} шт.<br>Сервер: {srv}</b></center></div></div>';
 ///админка///

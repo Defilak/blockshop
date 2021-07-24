@@ -1,6 +1,13 @@
 <?php
 
 define('BLOCKSHOP', true);
+
+//define autoloader
+spl_autoload_register(function ($className) {
+    $className = str_replace("\\", DIRECTORY_SEPARATOR, $className);
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/blockshop/class/' . $className . '.php';
+});
+
 include 'config.php';
 
 include 'views/design.php';
@@ -12,7 +19,7 @@ foreach ($_POST as $name => $value) {
 $a = array_map('trim', $_POST);
 $count = count($a);
 
-include_once 'core/check_session.php';
+include_once 'core/security.php';
 
 if ($group == '-1') {
     badly("Сударь, вам не мешало бы авторизироваться!");
@@ -23,7 +30,7 @@ if ($count > 1) {
     badly("Фриз тебе на одну минуту за такие дела!");
 }
 
-if(empty($_SESSION['buytime'])) {
+if (empty($_SESSION['buytime'])) {
     $_SESSION['buytime'] = 0;
 }
 
@@ -273,7 +280,7 @@ function history($s1)
     $search = array('{name}', '{dir}', '{img}', '{info}', '{date}', '{icons}');
     for ($i = 0; $i < count($q); $i++) {
         $d = date('j.m.Y H:i:s', $q[$i]['date']);
-        list($n, $a, $p, $l, $r) = explode(":n:", $q[$i]['info']);
+        list($n, $a, $p, $l) = explode(":n:", $q[$i]['info']);
         if ($p != 0) {
             $g = '<b>' . skl($a, array('штука', 'штуки', 'штук')) . ' за ' . $p . '</b>';
         } else {
@@ -654,8 +661,8 @@ function edituser($s1)
     $q = $db->select("SELECT * from `{$table_economy['table']}` where `{$table_economy['name']}` LIKE '{$s1}%%%%' LIMIT 0,50");
     ///создаем массив забаненных///
     $w = $db->select("SELECT * from banlist");
-    
-    if(!empty($w)) {
+
+    if (!empty($w)) {
         for ($i = 0; $i < count($q); $i++) {
             $arr[] .= $w[0]['name'];
         }
@@ -682,7 +689,7 @@ function edituser($s1)
 function edit($s1)
 {
     global $blocks, $server_names, $cat, $db;
-    
+
     /*if(count(explode("::", $s1)) < 11) {
         badly("В полях ввода обнаружены запрещенные символы!1");
     }*/
@@ -829,7 +836,7 @@ function inlog($s1, $s2)
 {
     global $username;
 
-    if(!is_dir(blockshop_root('logs'))) {
+    if (!is_dir(blockshop_root('logs'))) {
         mkdir(blockshop_root('logs'));
     }
 

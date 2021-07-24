@@ -46,11 +46,15 @@ class DB
 
     public static function getConnection()
     {
-        if (isset(self::$params) && !isset(self::$pdo)) {
-            $args = self::$params;
-            self::$pdo = new PDO("mysql:host={$args['host']}:{$args['port']};dbname={$args['db_name']}", $args['user'], $args['password']);
-            self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING); //спавнить предупреждения
-            self::$pdo->exec('SET NAMES UTF8');
+        if (!isset(self::$pdo)) {
+
+            $args = config('database');
+            self::$pdo = new PDO("mysql:host={$args['host']}:{$args['port']};dbname={$args['db_name']}", $args['username'], $args['password']);
+
+            if($args['show_errors']) {
+                self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING); //спавнить предупреждения
+            }
+            self::$pdo->exec("SET NAMES {$args['charset']}");
         }
 
         return self::$pdo;

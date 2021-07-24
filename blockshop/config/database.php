@@ -8,10 +8,12 @@ return [
 
     'password' => 'root',
 
-    'db' => 'blockshop',
+    'db_name' => 'blockshop',
 
     'port' => 3306,
 
-    'charset' => 'UTF8'
+    'charset' => 'UTF8',
+
+    'show_errors' => true
 
 ];

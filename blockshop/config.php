@@ -7,6 +7,7 @@ if (!defined('BLOCKSHOP')) {
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
 require_once 'exception_handler.php';
 require_once 'config/config.php';
 
@@ -17,7 +18,7 @@ $db_config = config('database');
 $mysql_host = $db_config['host'];
 $mysql_user = $db_config['username'];
 $mysql_pass = $db_config['password'];
-$mysql_db = $db_config['db'];
+$mysql_db = $db_config['db_name'];
 $mysql_port = $db_config['port'];
 $charset = $db_config['charset'];
 
@@ -97,8 +98,8 @@ $mrh_pass1 = ''; ///пароль робокассы
 
 $exchangeFactor = '100'; ///отношение iConomy к Рублям (30:1)
 $nominal = 0; ///начальный баланс iConomy
-$sklrub = array('рубль', 'рубля', 'рублей', 'руб'); ///склонение реальной валюты
-$skleco = array('пиксель', 'пикселя', 'пикселей', 'пикс'); ///склонение игровой валюты
+$sklrub = ['рубль', 'рубля', 'рублей', 'руб']; ///склонение реальной валюты
+$skleco = ['пиксель', 'пикселя', 'пикселей', 'пикс']; ///склонение игровой валюты
 
 ///Массив зачарований///
 $enchs = array(
@@ -115,5 +116,4 @@ $clrs = array(
     'b:#40ffff:Голубой', 'c:#ff4040:Красный', 'd:#ff40ff:Розовый', 'e:#ffff40:Желтый', 'f:#ffffff:',
 );
 
-require_once 'db_connection.php';
 require_once 'common.php';
