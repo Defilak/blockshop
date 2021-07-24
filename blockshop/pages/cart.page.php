@@ -1,7 +1,14 @@
 <?php
 
-///склад////
-function cart($s1)
+global $ban;
+
+// Условие использования действия
+if($ban == 1) {
+    return false;
+}
+
+//склад
+return function($s1)
 {
     global $table_cart, $dir, $cartdesign, $server_names, $db, $goodly, $icons;
     $c = '';
@@ -20,4 +27,11 @@ function cart($s1)
         responses\badly('Корзина пуста!');
     }
     die($m . $c);
-}
+};
+
+return [
+    'group' => 15,
+    'action' => function($value) {
+
+    }
+];
