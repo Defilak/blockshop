@@ -6,7 +6,7 @@ return [
     
     'username' => 'root',
 
-    'password' => 'root',
+    'password' => '',
 
     'db_name' => 'blockshop',
 
