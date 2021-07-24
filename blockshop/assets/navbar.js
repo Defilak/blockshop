@@ -1,8 +1,6 @@
+
+
 document.addEventListener('DOMContentLoaded', function () {
-    /*navbar.setBanlist = function(val) {
-        this.banlistMode = val;
-    }
-*/
     const containerEl = document.getElementById(containerElId)
 
     async function makePost(url, key, value = 0) {
@@ -12,24 +10,30 @@ document.addEventListener('DOMContentLoaded', function () {
             body: key + '=' + value,
         })
     }
-
     navbar.page = async function (page, value = 0) {
-        let response = await makePost(urlIndex, page + '=' + value)
+        let response = await makePost(urlIndex, page, value)
         if (response.ok) {
             let data = await response.text()
             containerEl.innerHTML = data
         }
     }
 
-    navbar.toServer = function () {
-        document.getElementById(resultElId).innerHTML = ''
-        var v1 = document.getElementById('server').value
-        var v2 = document.getElementById('category').value
-        post('shop=' + v1 + ':' + v2, containerElId, urlIndex)
+    navbar.currency = async function (el) {
+        if (el.value == 0) {
+            el.value = 1
+        } else {
+            el.value = 0
+        }
+
+        el.title = await (await makePost(urlAjax, 'balance', el.value)).text()
+        el.src = urlRoot + 'assets/img/' + el.value + '.png'
     }
 
-    navbar.toCabinet = function () {
-        post('lk=0', containerElId, urlIndex)
+    function tobanlist() {
+        
+        document.getElementById(resultElId).innerHTML = "";
+        var v1 = document.getElementById("server").value;
+        post("banlist=" + v1, containerElId, urlIndex);
     }
 })
 
@@ -46,6 +50,12 @@ function setbanlistF() {
     banlistmode = false
     navbar.banlistMode = false
 }
+
+/*function tobanlist() {
+    document.getElementById(resultElId).innerHTML = "";
+    var v1 = document.getElementById("server").value;
+    post("banlist=" + v1, containerElId, urlIndex);
+}*/
 /*
 function toserver() {
     if (banlistmode) {
@@ -57,6 +67,22 @@ function toserver() {
         post("shop=" + v1 + ":" + v2, containerElId, urlIndex);
     }
 }*/
+function post2(s1) {
+    var req = new XMLHttpRequest()
+    if (req) {
+        req.open('POST', urlAjax, false)
+        req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+        req.send('balance=' + s1)
+        if (req.status == 200) {
+            var rData = req.responseText
+            return rData
+        } else {
+            alert('Не удалось получить данные:\n' + req.statusText)
+        }
+    } else {
+        alert('Браузер не поддерживает AJAX')
+    }
+}
 
 function valuta() {
     var div = document.getElementById('changeval')

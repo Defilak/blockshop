@@ -130,11 +130,6 @@ function perevod() {
     var p3 = document.getElementById("pt3").value;
     ajaxfunc("perevod=" + p1 + "::" + p2 + "::" + p3);
 }
-function tobanlist() {
-    document.getElementById(resultElId).innerHTML = "";
-    var v1 = document.getElementById("server").value;
-    post("banlist=" + v1, containerElId, urlIndex);
-}
 
 function upskin() {
     document.getElementById("skinform").submit();

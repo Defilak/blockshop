@@ -1,12 +1,12 @@
 <?php
 
 $actions = [
-    ['title' => 'Перейти в Магазин блоков', 'img' => 'shop', 'onclick' => 'navbar.toServer()'/*'setbanlistF();toserver(); '*/],
-['title' => 'Перейти в Личный Кабинет', 'img' => 'lk', 'onclick' => 'navbar.page(\'lk\')'/*'setbanlistF();tolc();'*/],
-    ['title' => 'Сменить валюту',           'img' => '0', 'onclick' => 'setbanlistF();valuta(); '],
-    ['title' => 'Посмотреть корзину',       'img' => 'cart', 'onclick' => "setbanlistF();props('cart');"],
-    ['title' => 'Посмотреть историю',       'img' => 'history', 'onclick' => "setbanlistF();props('history');"],
-    ['title' => 'Банлист',                  'img' => 'banlist', 'onclick' => 'tobanlist(); setbanlistT();']
+    ['title' => 'Перейти в Магазин блоков', 'img' => 'shop', 'onclick' => "navbar.page('shop', server.value + ':' + category.value)"],
+    ['title' => 'Перейти в Личный Кабинет', 'img' => 'lk', 'onclick' => "navbar.page('lk')"],
+    ['title' => 'Сменить валюту',           'img' => '0', 'onclick' => 'navbar.currency(this); '],
+    ['title' => 'Посмотреть корзину',       'img' => 'cart', 'onclick' => "navbar.page('cart');"],
+    ['title' => 'Посмотреть историю',       'img' => 'history', 'onclick' => "navbar.page('history');"],
+    ['title' => 'Банлист',                  'img' => 'banlist', 'onclick' => "navbar.page('banlist', server.value)"]
 ];
 
 //add buttons if admin
