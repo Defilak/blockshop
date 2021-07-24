@@ -29,7 +29,7 @@ class DB
     public static function select($query)
     {
         $pdo = self::getConnection();
-        return $pdo->select($query);
+        return $pdo->query($query);
     }
 
     public static function query(string $sql, array $params = [], string $className = 'stdClass'): ?array
