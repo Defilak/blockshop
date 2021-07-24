@@ -25,13 +25,13 @@ if (is_route('lk')) {
     if ($_POST['lk'] == 0) {
         //require_once 'core/navbar_template.php';
         
-        echo '<div id="result"></div><div id="cont">';
+        echo '<div id="result" class="my-4"></div><div id="cont">';
         require_once 'pages/cabinet.page.php';
         echo '</div>';
     } else {
         require_once 'core/navbar_template.php';
 
-        echo '<div id="result"></div><div id="cont">';
+        echo '<div id="result" class="my-4"></div><div id="cont">';
         require_once 'pages/cabinet.page.php';
         echo '</div>';
     }
