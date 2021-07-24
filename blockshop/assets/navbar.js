@@ -18,6 +18,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    navbar.pageAjax = async function (page, value = 0) {
+        let response = await makePost(urlAjax, page, value)
+        if (response.ok) {
+            let data = await response.text()
+            containerEl.innerHTML = data
+        }
+    }
+
     navbar.currency = async function (el) {
         if (el.value == 0) {
             el.value = 1
@@ -27,13 +35,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         el.title = await (await makePost(urlAjax, 'balance', el.value)).text()
         el.src = urlRoot + 'assets/img/' + el.value + '.png'
-    }
-
-    function tobanlist() {
-        
-        document.getElementById(resultElId).innerHTML = "";
-        var v1 = document.getElementById("server").value;
-        post("banlist=" + v1, containerElId, urlIndex);
     }
 })
 

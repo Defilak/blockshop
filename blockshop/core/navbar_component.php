@@ -13,8 +13,8 @@ $actions = [
 if ($group == 15) {
     array_unshift(
         $actions,
-        ['title' => 'Добавить блок',             'img' => 'add', 'onclick' => "bedit('admin=0');"],
-        ['title' => 'Редактировать игрока(-ов)', 'img' => 'user', 'onclick' => "props('edituser');"]
+        ['title' => 'Добавить блок',             'img' => 'add', 'onclick' => "navbar.pageAjax('admin');"],
+        ['title' => 'Редактировать игрока(-ов)', 'img' => 'user', 'onclick' => "navbar.pageAjax('edituser', usercheck.value);"]
     );
 }
 
