@@ -18,22 +18,30 @@ require_once 'core/security.php';
 
 // это чтоб ажаксом страницы норм подгружались, шапку не грузим если ажакс
 if (is_not_routes('shop', 'lk', 'banlist')) {
-    require_once 'core/navbar_template.php';
+    require_once 'core/navbar_component.php';
 }
 
 if (is_route('lk')) {
     if ($_POST['lk'] == 0) {
-        //require_once 'core/navbar_template.php';
+        //require_once 'core/navbar_component.php';
         
         echo '<div id="result" class="my-4"></div><div id="cont">';
         require_once 'pages/cabinet.page.php';
         echo '</div>';
     } else {
-        require_once 'core/navbar_template.php';
+        require_once 'core/navbar_component.php';
 
         echo '<div id="result" class="my-4"></div><div id="cont">';
         require_once 'pages/cabinet.page.php';
         echo '</div>';
+    }
+}
+
+
+if (is_route('cart')) {
+    $page = require_once 'pages/cart.page.php';
+    if($page) {
+        $page($_POST['cart']);
     }
 }
 

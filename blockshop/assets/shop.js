@@ -34,14 +34,14 @@ function prefixview() {
 function doIcon(s1) {
     var div = document.getElementById("img_box");
     var div1 = document.getElementById("b1");
-    var div2 = document.getElementById("b2");
-    var img = url3 + "assets/img/icons/" + s1;
+    var containerElId = document.getElementById("b2");
+    var img = urlRoot + "assets/img/icons/" + s1;
     div.style.background = "url( '" + img + "') no-repeat center";
     div1.value = s1;
     if (s1 != s1.split("_")[0]) {
-        div2.value = s1.split("_")[0];
+        containerElId.value = s1.split("_")[0];
     } else {
-        div2.value = s1.split(".")[0];
+        containerElId.value = s1.split(".")[0];
     }
 }
 function addench() {
@@ -57,24 +57,10 @@ function addench2() {
     top1.value = top1.value + "-" + top;
 }
 
-var eco = document.getElementById("changeval");
-function valuta() {
-    var div = document.getElementById("changeval");
-    if (div.value == 0) {
-        div.value++;
-    } else {
-        div.value--;
-    }
-    div.title = post2(div.value);
-    var img = url3 + "assets/img/" + div.value + ".png";
-    div.src = img;
-}
-
-;
-var div1 = "result";
-var div2 = "cont";
+var resultElId = "result";
+const containerElId = 'cont';
 function ajaxfunc(s1) {
-    post(s1, div1, url1);
+    post(s1, resultElId, urlAjax);
 }
 
 function post(post, result, container) {
@@ -99,7 +85,7 @@ function post(post, result, container) {
 function post2(s1) {
     var req = new XMLHttpRequest();
     if (req) {
-        req.open("POST", url1, false);
+        req.open("POST", urlAjax, false);
         req.setRequestHeader(
             "Content-Type",
             "application/x-www-form-urlencoded"
@@ -116,7 +102,7 @@ function post2(s1) {
     }
 }
 function giveskin() {
-    post("giveskin=0", "giveskin", url1);
+    post("giveskin=0", "giveskin", urlAjax);
 }
 function changeprefix() {
     var p1 = document.getElementById("prefcol").value;
@@ -144,31 +130,10 @@ function perevod() {
     var p3 = document.getElementById("pt3").value;
     ajaxfunc("perevod=" + p1 + "::" + p2 + "::" + p3);
 }
-function toserver() {
-    if (banlistmode) {
-        tobanlist();
-    } else {
-        document.getElementById(div1).innerHTML = "";
-        var v1 = document.getElementById("server").value;
-        var v2 = document.getElementById("category").value;
-        post("shop=" + v1 + ":" + v2, div2, url2);
-    }
-}
-function tolc() {
-    post("lk=0", div2, url2);
-}
 function tobanlist() {
-    document.getElementById(div1).innerHTML = "";
+    document.getElementById(resultElId).innerHTML = "";
     var v1 = document.getElementById("server").value;
-    post("banlist=" + v1, div2, url2);
-}
-
-function setbanlistT() {
-    banlistmode = true;
-}
-
-function setbanlistF() {
-    banlistmode = false;
+    post("banlist=" + v1, containerElId, urlIndex);
 }
 
 function upskin() {
@@ -180,16 +145,8 @@ function upcloack() {
     setTimeout("giveskin();", 5);
 }
 
-function props(s1) {
-    document.getElementById(div1).innerHTML = "";
-    var var1 = document.getElementById("usercheck").value;
-    post(s1 + "=" + var1, div2, url1);
-}
 
-function bedit(s1) {
-    document.getElementById(div1).innerHTML = "";
-    post(s1, div2, url1);
-}
+
 function zedit() {
     var b1 = document.getElementById("b1").value;
     var b2 = document.getElementById("b2").value;
@@ -229,7 +186,12 @@ function del(s1) {
     ajaxfunc("del=" + s1);
     $("#m" + s1).fadeOut(500);
 }
+
 function delblock(s1) {
     ajaxfunc("delb=" + s1);
-    props("cart");
+    //props("cart");
+
+    document.getElementById(resultElId).innerHTML = "";
+    var var1 = document.getElementById("usercheck").value;
+    post('cart' + "=" + var1, containerElId, urlAjax);
 }
