@@ -6,8 +6,9 @@ include 'config.php';
 include 'design.php';
 
 include_once 'ajax/responses.php';
+include_once 'ajax/cooldown.php';
 
-
+//убрать
 require_once 'lib/class.simpleDB.php';
 require_once 'lib/class.simpleMysqli.php';
 $db_config = config('database');
@@ -21,7 +22,7 @@ $db = new simpleMysqli([
 ]);
 
 
-
+///вводим глобальную защиту от sql-инъекций)))))
 function super_sql_injection_shield($_GET_OR_POST)
 {
     foreach ($_GET_OR_POST as $key => $value) {
@@ -30,26 +31,10 @@ function super_sql_injection_shield($_GET_OR_POST)
     return array_map('trim', $_GET_OR_POST);
 }
 
-///вводим глобальную защиту от sql-инъекций)))))
-$a = super_sql_injection_shield(count($_POST) != 0 ? $_POST : $_GET);
-print_r($a);
-
-$args_count = count($a);
-
-//задаем переменные пользователя
+//задаем переменные пользователя и отшиваем если не залогирован
 include_once 'core/security.php';
-//Если не залогирован
 if ($group == -1) {
     responses\bad('Сударь, вам не мешало бы авторизироваться!');
-}
-
-// Кулдаун на действия
-$cooldown = include_once 'ajax/cooldown.php';
-
-//должен быть только один аргумент
-if ($args_count != 1) {
-    $cooldown->update(60);
-    responses\badly('Фриз тебе на одну минуту за такие дела!');
 }
 
 /**
@@ -71,19 +56,46 @@ function load_action(string $route): ?callable
     return null;
 }
 
-$route = array_key_first($a);
-$value = $a[$route];
+function route_action($name, $args, $force_exit = false)
+{
+    // Загружаем функцию действия если существует
+    $action = load_action($name);
+    if ($action) {
+        $response = $action($args);
 
+        if (is_array($response) || is_object($response)) {
+            $response = json_encode($response);
+        }
 
-$action = load_action($route);
-if ($action) {
+        exit($response);
+    }
+
+    if($force_exit) {
+        http_response_code(404);
+        exit;
+    }
 }
 
-//print_r(ajax_action($a));
-die;
+// Кулдаун на действия
+$cooldown = new Cooldown(time());
+
+$request_params = $a = super_sql_injection_shield(count($_POST) != 0 ? $_POST : $_GET);
+$request_params_count = count($a);
+
+//должен быть только один аргумент
+if ($request_params_count != 1) {
+    $cooldown->update(60);
+    responses\badly('Фриз тебе на одну минуту за такие дела!');
+}
+
+// Получаем имя действия и его параметры
+$action_name = array_key_first($request_params);
+$action_args = $request_params[$action_name];
+//route_action($action_name, $action_args);
+
 // Если аргумент 1 и есть игрок
 // это условие можно убрать
-if ($args_count == 1 && $group > -1) {
+if ($request_params_count == 1 && $group > -1) {
     if ($ban == 1) {
         if (isset($a['unban'])) {
             unban();
@@ -117,7 +129,7 @@ if ($args_count == 1 && $group > -1) {
     } elseif (isset($a['balance'])) {
         balance($a['balance']);
     } elseif (isset($a['cart'])) {
-        $cart = include_once 'ajax/cart.php';
+        $cart = include_once 'ajax/actions/cart.php';
         $cart($username);
     } elseif (isset($a['history'])) {
         history($username);
