@@ -17,7 +17,7 @@ if(is_route('/auth')) {
 require_once 'core/security.php';
 
 // это чтоб ажаксом страницы норм подгружались, шапку не грузим если ажакс
-if (is_not_routes('shop', 'lk', 'banlist')) {
+if (is_not_routes('shop', 'lk', 'banlist', 'cart', 'history')) {
     require_once 'core/navbar_component.php';
 }
 
@@ -43,6 +43,10 @@ if (is_route('cart')) {
     if($page) {
         $page($_POST['cart']);
     }
+}
+
+if(is_route('history')) {
+    exit('здесь будет история');
 }
 
 ///Банлист///

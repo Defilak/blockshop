@@ -28,10 +28,3 @@ return function($s1)
     }
     die($m . $c);
 };
-
-return [
-    'group' => 15,
-    'action' => function($value) {
-
-    }
-];
