@@ -57,25 +57,6 @@ $headdesign = '
 </div>
 ';
 
-$servdesign = '
-    <div id="serverlist" style="float:left;">
-        <select id="server" class="svlist" onchange="toserver();" title="Выберите сервер">{srv}</select> 
-        <select id="category" class="svlist" onchange="toserver();" title="Выберите категорию">{cats}</select> 
-        <input type="text" class="svlist" style="padding:6px;" id="usercheck" value placeholder="Кому берем?">
-    </div>
-';
-
-/*$userdesign='
-<div style="width:auto;float:right"> 
-    {add} 
-    <input type="image" class="imgbtn" src="/{dir}img/shop.png" onclick="setbanlistF(); toserver();" title="Перейти в Магазин блоков"> 
-    <input type="image" class="imgbtn" src="/{dir}img/lk.png" onclick="tolc(); setbanlistF();" title="Перейти в Личный Кабинет"> 
-    <input type="image" class="imgbtn" id="changeval" value="0" src="/{dir}img/0.png" onclick="valuta(); setbanlistF();" title="Сменить валюту"> 
-    <input type="image" class="imgbtn" src="/{dir}img/cart.png" onclick="props(\'cart\'); setbanlistF();" title="Посмотреть корзину"> 
-    <input type="image" class="imgbtn" src="/{dir}img/history.png" onclick="props(\'history\'); setbanlistF();" title="Посмотреть историю"> 
-    <input type="image" class="imgbtn" src="/{dir}img/banlist.png" onclick="tobanlist(); setbanlistT();" title="Банлист"> 
-</div>
-';*/
 $ajaxcont = '<div id="cont" style="width:100%;line-height: 18px;">{cont}</div>';
 $ajaxmsg = '<div id="result" style="float:left;width:100%;margin-top:6px;"></div>';
 ///дизайн магазина///
