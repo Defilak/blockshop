@@ -5,7 +5,7 @@ namespace responses;
 
 function alert_template($type, $message)
 {
-    return "<div class=\"mess {$type}\" id=\"shopmsg\">{$message}</div>";
+    return "<div class=\"alert alert-{$type}\" id=\"shopmsg\">{$message}</div>";
 }
 
 function infly($message)
