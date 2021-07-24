@@ -184,7 +184,12 @@ $edituserbody = '<tr class="tfoot"><th colspan="5"><div class="hr_line"></div></
 	<td>{bans}</td><td>{buys}</td></tr><tr class=""><td background="/{dir}img/line.gif" height="1" colspan="6"></td></tr>';
 
 
-$admlist = '<div id="ach"><input type=radio name="image" id="{img}" value="{img}" onChange="javascript: doIcon( this.value );"><label for="{img}"><img src="/{icons}{img}"></label></div>';
+$admlist = <<<EOL
+<div id="ach">
+    <input type="radio" name="image" id="{img}" value="{img}" onChange="doIcon(this.value);">
+    <label for="{img}"><img src="/{icons}{img}"></label>
+</div>
+EOL;
 
 $admbox = '<div id="img_box" style="width: 36px;height:36px;background-image: url(/{icons}{img}); background-position: 50% 50%; background-repeat: no-repeat no-repeat;"></div><input type=hidden id="b1" value="{img}" style="display:none">';
 

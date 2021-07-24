@@ -593,12 +593,13 @@ function admin($s1)
         responses\warning("Неверно заполнено одно из полей!");
     }
     ///массив изображений блоков
-    $files = scandir($icons);
+    
+    $files = scandir(blockshop_root($icons));
     $l = sizeof($files);
     $imglist = '';
     $c = '';
     for ($i = 2; $i < $l; $i++) {
-        $imglist .= str_replace(array('{img}', '{dir}', '{icons}'), array($files[$i], $dir, $icons), $admlist);
+        $imglist .= str_replace(array('{img}', '{dir}', '{icons}'), array($files[$i], $dir, blockshop_public($icons)), $admlist);
     }
     ///определение значений добавления/редактирования блоков
     $serv = servlist();

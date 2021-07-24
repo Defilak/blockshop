@@ -33,7 +33,7 @@ $logs = 'salelog'; ///таблица логов
 
 $dir = 'blockshop/'; ///папка с данным скриптом (слэш в конце обязательно)
 
-$icons = $dir.'assets/img/icons/';
+$icons = 'assets/img/icons/';
 
 
 function blockshop_root($path = '') {
