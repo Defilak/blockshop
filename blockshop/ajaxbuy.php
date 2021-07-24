@@ -241,8 +241,6 @@ function donate($s1)
     goodly("Вы купили статус <b>{$name}</b> на <b>{$days}</b> дней за <b>{$s2}</b>!");
 }
 
-///банлист///
-
 ///склад////
 function cart($s1)
 {

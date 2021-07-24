@@ -14,7 +14,8 @@ require_once 'router.php';
 
 //типа контроллер такой 😎
 if(is_route('/auth')) {
-    require_once 'core/check_login.php';
+    //require_once 'core/check_login.php';
+    require_once 'pages/login.page.php';
 }
 
 //типа миддлвар еее 😎😎
@@ -27,16 +28,16 @@ if (is_not_routes('shop', 'lk', 'banlist')) {
 
 if (is_route('lk')) {
     if ($_POST['lk'] == 0) {
-        //require_once 'core/controller_lk.php';
+        //require_once 'core/navbar_template.php';
         
         echo '<div id="result"></div><div id="cont">';
-        require_once 'core/controller_lk.php';
+        require_once 'pages/cabinet.page.php';
         echo '</div>';
     } else {
         require_once 'core/navbar_template.php';
 
         echo '<div id="result"></div><div id="cont">';
-        require_once 'core/controller_lk.php';
+        require_once 'pages/cabinet.page.php';
         echo '</div>';
     }
 }
@@ -44,20 +45,17 @@ if (is_route('lk')) {
 ///Банлист///
 if (isset($_POST['banlist'])) {
     $server_id = $_POST['banlist']; //sql inject
-    include 'core/banlist_template.php';
+    include 'pages/banlist.page.php';
 }
 
 ////магазин блоков///
 if (isset($_POST['shop'])) {
-    //shop($_POST['shop']);
     $s1 = $_POST['shop'];
-    include 'core/shop_template.php';
+    include 'pages/shop.page.php';
     die;
 }
 
 if (isset($_POST['shop']) & isset($_POST['banlist'])) {
     $server_id = $_POST['shop']; //sql inject
-    include 'core/banlist_template.php';
+    include 'pages/banlist.page.php';
 }
-
-///Примечание: все запросы хорошо фильтруются, дыр и инъекций, как может многим показаться, здесь нет)))))))))

@@ -17,5 +17,6 @@ if($_SERVER['REQUEST_URI'] === '/') {
 if (file_exists(dirname(__FILE__).$_SERVER['REQUEST_URI'])) {
     include_once dirname(__FILE__).$_SERVER['REQUEST_URI'];
 } else {
-    exit('404');
+    include_once 'index.php';
+    exit;
 }

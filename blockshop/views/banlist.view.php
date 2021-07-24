@@ -1,14 +1,3 @@
-<?php
-
-//$s = array('Medieval', 'Imphar'); ///массив серверов(первое по умолчанию)
-
-
-$stmt = DB::prepare("SELECT * FROM `{$banlist}_{$server_names[$server_id]}` LIMIT 25");
-$stmt->execute();
-
-$result = $stmt->fetchAll();
-
-?>
 <table class="banlist_table">
     <tr>
         <th>Ник</th>

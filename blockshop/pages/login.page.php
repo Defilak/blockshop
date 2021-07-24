@@ -1,8 +1,6 @@
 <?php
-//технически - это контроллер /auth
-namespace route\auth;
 
-use User;
+//use User;
 
 
 //если отослана форма

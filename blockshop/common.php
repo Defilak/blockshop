@@ -42,19 +42,19 @@ function catlist()
     return $q[$s2];
 }*/
 
-function skl($n, $s1)
+function skl($number, $wordCases)
 {
-    $n = round($n);
-    $m = $n % 10;
-    $j = $n % 100;
+    $number = round($number);
+    $m = $number % 10;
+    $j = $number % 100;
     if ($m == 1) {
-        $s = $s1[0];
+        $s = $wordCases[0];
     }
     if ($m >= 2 && $m <= 4) {
-        $s = $s1[1];
+        $s = $wordCases[1];
     }
     if ($m == 0 || $m >= 5 || ($j >= 10 && $j <= 20)) {
-        $s = $s1[2];
+        $s = $wordCases[2];
     }
-    return $n . ' ' . $s;
+    return $number . ' ' . $s;
 }
