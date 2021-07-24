@@ -8,7 +8,22 @@ include 'design.php';
 include_once 'ajax/responses.php';
 
 
-function super_sql_injection_field($_GET_OR_POST)
+require_once 'class/DB.php';
+require_once 'lib/class.simpleDB.php';
+require_once 'lib/class.simpleMysqli.php';
+
+$db_config = config('database');
+$db = new simpleMysqli([
+    'server' => $db_config['host'],
+    'username' => $db_config['username'],
+    'password' => $db_config['password'],
+    'db' => $db_config['db_name'],
+    'port' => $db_config['port'],
+    'charset' => $db_config['charset']
+]);
+
+
+function super_sql_injection_shield($_GET_OR_POST)
 {
     foreach ($_GET_OR_POST as $key => $value) {
         $_GET_OR_POST[$key] = str_replace(["'", '"', ',', '\\', '<', '>', '$', '%'], '', $value);
@@ -17,18 +32,22 @@ function super_sql_injection_field($_GET_OR_POST)
 }
 
 ///вводим глобальную защиту от sql-инъекций)))))
-$a = super_sql_injection_field($_POST);
-$count = count($a);
+$a = super_sql_injection_shield($_POST);
+$args_count = count($a);
 
 //задаем переменные пользователя
 include_once 'core/security.php';
-
+//Если не залогирован
 if ($group == -1) {
-    responses\badly("Сударь, вам не мешало бы авторизироваться!");
+    responses\bad('Сударь, вам не мешало бы авторизироваться!');
 }
 
-$time = time();
-if ($count > 1) {
+// Кулдаун на действия
+include_once 'ajax/cooldown.php';
+
+//ставим кулдаун на действия
+/*$time = time();
+if ($args_count > 1) {
     $_SESSION['buytime'] = $time + 60;
     responses\badly("Фриз тебе на одну минуту за такие дела!");
 }
@@ -36,27 +55,13 @@ if ($count > 1) {
 if (empty($_SESSION['buytime'])) {
     $_SESSION['buytime'] = 0;
 }
+*/
 
 
 
-// Подключение к mysqli
-require_once 'lib/class.simpleDB.php';
-require_once 'lib/class.simpleMysqli.php';
-require_once 'class/DB.php';
-
-$mysqli_settings = array(
-    'server' => $mysql_host,
-    'username' => $mysql_user,
-    'password' => $mysql_pass,
-    'db' => $mysql_db,
-    'port' => '3306',
-    'charset' => $charset,
-);
-
-$db = new simpleMysqli($mysqli_settings);
 
 //////Условия использования функций///////
-if ($count == 1 and $group != '-1') {
+if ($args_count == 1 and $group != '-1') {
     if ($ban == 1) {
         if (isset($a['unban'])) {
             unban();

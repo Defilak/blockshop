@@ -6,7 +6,7 @@ function cart($s1)
     global $table_cart, $dir, $cartdesign, $server_names, $db, $goodly, $icons;
     $c = '';
     $m = '';
-    $m .= infly('Здесь отображается список вещей, которые вы можете забрать в игре.<br> Для получения вещей в игре используйте команду: <b>/cart</b>');
+    $m .= responses\infly('Здесь отображается список вещей, которые вы можете забрать в игре.<br> Для получения вещей в игре используйте команду: <b>/cart</b>');
     $siz = count($server_names);
     for ($i = 0, $size = $siz; $i < $size; ++$i) {
         $q = $db->select("SELECT * FROM `{$server_names[$i]}` WHERE `{$table_cart['name']}`='{$s1}'");
@@ -17,7 +17,7 @@ function cart($s1)
         }
     }
     if (empty($c)) {
-        badly('Корзина пуста!');
+        responses\badly('Корзина пуста!');
     }
     die($m . $c);
 }

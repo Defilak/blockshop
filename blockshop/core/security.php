@@ -31,6 +31,7 @@ $group = -1;
 $bancount = 0;
 $buys = 0;
 $ban = 0;
+//$session_cooldown = 0;
 
 if (has_session()) {
     $user = user_from_session();
@@ -43,4 +44,18 @@ if (has_session()) {
     $bancount = $economy->bancount;
     $buys = $economy->buys;
     $ban = $user->getBanEntry() ? 1 : 0;
+    //$session_cooldown ?? $_SESSION['action_time'];
 }
+
+return [
+    'user' => $user,
+    'username' => $username,
+    'economy' => $economy,
+    'money' => $money,
+    'iconomy' => $iconomy,
+    'group' => $group,
+    'bancount' => $bancount,
+    'buys' => $buys,
+    'ban' => $ban,
+    //'session_cooldown' => $session_cooldown
+];
