@@ -38,7 +38,7 @@
                 <span class="navbar-button m-1" title="Перейти в Личный Кабинет" onclick="navbar.page('lk')">
                     <img src="<?= blockshop_public("assets/img/navbar/lk.png") ?>" />
                 </span>
-                <span class="navbar-button m-1" title="Сменить валюту" onclick="navbar.currency(this)" data-value="0">
+                <span class="navbar-button m-1" title="Сменить валюту" onclick="navbar.currency(this)" data-value="0" id="changeval">
                     <img src="<?= blockshop_public("assets/img/navbar/0.png") ?>" />
                 </span>
                 <span class="navbar-button m-1" title="Посмотреть корзину" onclick="navbar.page('cart')">

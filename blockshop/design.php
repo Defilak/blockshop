@@ -203,7 +203,14 @@ $historydesign = '
 <div style="float:left;width:25%;margin-top:7px;"><b>{info}</b></div><div style="float:left;width:25%;margin-top:7px;"><b>{date}</b></div>
 </div>';
 ///дизайн корзины///
-$cartdesign = '<div class="presale" style="width:20%;"><div class="button" style="height:100px;margin:2px;font-size:10px;"><input type="button" onclick="delblock(\'{id}:{srv}\');" class="ud uk" title="Отказаться от покупки"><center><b>{name}<br /><img src="/{dir}{icons}{img}"><br>{amount} шт.<br>Сервер: {srv}</b></center></div></div>';
+$cartdesign = <<<EOL
+<div class="presale" style="width:20%;">
+    <div class="button" style="height:100px;margin:2px;font-size:10px;">
+        <input type="button" onclick="delblock(\'{id}:{srv}\');" class="ud uk" title="Отказаться от покупки">
+        <center><b>{name}<br /><img src="/{dir}{icons}{img}"><br>{amount} шт.<br>Сервер: {srv}</b></center>
+    </div>
+</div>
+EOL;
 ///админка///
 $edituserhead = '<div class="button"><table width="100%" id="actionlist"><tbody><tr class="thead hoverRow"> <th width="100" style="padding:2px;">Ник:</th> <th width="100" style="padding:2px;">Рубли:</th> <th width="130">iConomy:</th><th width="130">Группа:</th><th width="130">Кол-во банов:</th><th width="130">Кол-во покупок:</th></tr>{content}</tbody></table></div>';
 $edituserbody = '<tr class="tfoot"><th colspan="5"><div class="hr_line"></div></th></tr>

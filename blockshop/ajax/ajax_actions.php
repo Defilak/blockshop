@@ -139,33 +139,6 @@ function donate($s1)
 }
 
 
-///история///
-function history($s1)
-{
-    global $dir, $logs, $historydesign, $db, $success, $icons;
-    $m = '';
-    $c = '';
-    $m .= responses\infly('Здесь отображаются все совершенные вами действия в магазине за ближайшие 10 суток.');
-    $q = $db->select("SELECT * FROM {$logs} WHERE name='{$s1}' ORDER BY date DESC");
-    $time = time() - 864000;
-    if (count($q) == 0) {
-        responses\warning('История пуста!');
-    }
-    $search = array('{name}', '{dir}', '{img}', '{info}', '{date}', '{icons}');
-    for ($i = 0; $i < count($q); $i++) {
-        $d = date('j.m.Y H:i:s', $q[$i]['date']);
-        list($n, $a, $p, $l) = explode(":n:", $q[$i]['info']);
-        if ($p != 0) {
-            $g = '<b>' . skl($a, array('штука', 'штуки', 'штук')) . ' за ' . $p . '</b>';
-        } else {
-            $g = '<b>' . $a . '</b>';
-        }
-        $replace = array($n, $dir, $l, $g, $d, $icons);
-        $c .= str_replace($search, $replace, $historydesign);
-    }
-    $db->delete("DELETE from {$logs} where date<{$time}");
-    die($m . $c);
-}
 
 ///получаем превью скинов
 function giveskin()

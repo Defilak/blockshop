@@ -135,9 +135,9 @@ if ($request_params_count == 1 && $group > -1) {
     } elseif (isset($a['cart'])) {
         $cart = include_once 'ajax/actions/cart.php';
         $cart($username);
-    } elseif (isset($a['history'])) {
+    } /*elseif (isset($a['history'])) {
         action\history($username);
-    } elseif (isset($a['delb'])) {
+    } */elseif (isset($a['delb'])) {
         action\back($a['delb']);
     } /*elseif ($_SESSION['buytime'] > $time) {
         $tm = skl($_SESSION['buytime'] - $time, array('секунду', 'секунды', 'секунд'));

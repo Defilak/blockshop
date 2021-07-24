@@ -111,12 +111,14 @@ function changeprefix() {
     var p4 = document.getElementById("suffcol").value;
     ajaxfunc("prefix=" + p1 + ":" + p2 + ":" + p3 + ":" + p4);
 }
+
 function buy(p1) {
     var p2 = document.getElementById("p" + p1).value;
     var p3 = document.getElementById("usercheck").value;
-    var p4 = document.getElementById("changeval").value;
+    var p4 = document.getElementById("changeval").dataset.value;
     ajaxfunc("buy=" + p1 + "::" + p2 + "::" + p4 + "::" + p3);
 }
+
 function buygroup(s1) {
     ajaxfunc("status=" + s1);
 }

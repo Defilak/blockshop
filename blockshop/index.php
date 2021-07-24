@@ -8,7 +8,7 @@ require_once 'router.php';
 
 
 //типа контроллер такой 😎
-if(is_route('/auth')) {
+if (is_route('/auth')) {
     //require_once 'core/check_login.php';
     require_once 'pages/login.page.php';
 }
@@ -24,7 +24,7 @@ if (is_not_routes('shop', 'lk', 'banlist', 'cart', 'history')) {
 if (is_route('lk')) {
     if ($_POST['lk'] == 0) {
         //require_once 'core/navbar_component.php';
-        
+
         echo '<div id="result" class="my-4"></div><div id="cont">';
         require_once 'pages/cabinet.page.php';
         echo '</div>';
@@ -40,13 +40,16 @@ if (is_route('lk')) {
 
 if (is_route('cart')) {
     $page = require_once 'pages/cart.page.php';
-    if($page) {
-        $page($_POST['cart']);
+    if ($page) {
+        $page($username);
     }
 }
 
-if(is_route('history')) {
-    exit('здесь будет история');
+if (is_route('history')) {
+    $page = require_once 'pages/history.page.php';
+    if ($page) {
+        $page($username);
+    }
 }
 
 ///Банлист///
