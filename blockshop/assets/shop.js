@@ -70,31 +70,25 @@ function valuta() {
     div.src = img;
 }
 
-var req;
-function createRequest() {
-    if (window.XMLHttpRequest) req = new XMLHttpRequest();
-    else if (window.ActiveXObject) {
-        try {
-            req = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e) {}
-        try {
-            req = new ActiveXObject("Microsoft.XMLHTTP");
-        } catch (e) {}
-    }
-    return req;
+;
+var div1 = "result";
+var div2 = "cont";
+function ajaxfunc(s1) {
+    post(s1, div1, url1);
 }
-function post(p1, p2, p3) {
-    req = createRequest();
+
+function post(post, result, container) {
+    var req = new XMLHttpRequest();
     if (req) {
-        req.open("POST", p3, false);
+        req.open("POST", container, false);
         req.setRequestHeader(
             "Content-Type",
             "application/x-www-form-urlencoded"
         );
-        req.send(p1);
+        req.send(post);
         if (req.status == 200) {
             var rData = req.responseText;
-            document.getElementById(p2).innerHTML = rData;
+            document.getElementById(result).innerHTML = rData;
         } else {
             alert("Не удалось получить данные:\n" + req.statusText);
         }
@@ -103,7 +97,7 @@ function post(p1, p2, p3) {
     }
 }
 function post2(s1) {
-    req = createRequest();
+    var req = new XMLHttpRequest();
     if (req) {
         req.open("POST", url1, false);
         req.setRequestHeader(
@@ -120,11 +114,6 @@ function post2(s1) {
     } else {
         alert("Браузер не поддерживает AJAX");
     }
-}
-var div1 = "result";
-var div2 = "cont";
-function ajaxfunc(s1) {
-    post(s1, div1, url1);
 }
 function giveskin() {
     post("giveskin=0", "giveskin", url1);
