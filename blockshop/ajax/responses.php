@@ -5,7 +5,12 @@ namespace responses;
 
 function alert_template($type, $message)
 {
-    return "<div class=\"alert alert-{$type}\" id=\"shopmsg\">{$message}</div>";
+    return <<<EOT
+        <div class="alert alert-{$type} alert-dismissible fade show" id="shopmsg">
+            {$message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    EOT;
 }
 
 function infly($message)
@@ -29,12 +34,12 @@ function text($message)
     return (alert_template('info', $message));
 }
 
-function bad($message)
+function warning($message)
 {
-    exit(alert_template('error', $message));
+    exit(alert_template('warning', $message));
 }
 
-function good($message)
+function success($message)
 {
     exit(alert_template('success', $message));
 }
