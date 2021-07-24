@@ -13,7 +13,7 @@ function _load_template_var()
 
 function _load_template($template, $data = null, $include_header = true)
 {
-    header("Content-type: text/html; charset=UTF-8");
+    //header("Content-type: text/html; charset=UTF-8");
     //check exist template
     $template_path = blockshop_root('views/' . $template . '.view.php');
     if (!file_exists($template_path)) {
