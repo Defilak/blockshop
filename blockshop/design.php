@@ -8,7 +8,6 @@ function _include_page($name, $args = [])
 
 function _load_template_var()
 {
-    
 }
 
 function _load_template($template, $data = null, $include_header = true)
@@ -34,6 +33,37 @@ function _exit_with_template($template, $data = null, $include_header = true)
     exit;
 }
 
+//utility-функции
+function enchments()
+{
+    global $enchs;
+    $template = '';
+    for ($i = 0; $i < count($enchs); $i++) {
+        [$code, $name] = explode(':', $enchs[$i]);
+        $template = "<option value=\"$code\">$name</option>";
+    }
+    return $template;
+}
+
+function servlist()
+{
+    global $server_names;
+    $l = '';
+    for ($i = 0, $size = count($server_names); $i < $size; ++$i) {
+        $l .= '<option value="' . $i . '">' . $server_names[$i] . '</option>';
+    }
+    return $l;
+}
+
+function catlist()
+{
+    global $cat;
+    $l = '';
+    for ($i = 0, $size = count($cat); $i < $size; ++$i) {
+        $l .= '<option value="' . $i . '">' . $cat[$i] . '</option>';
+    }
+    return $l;
+}
 
 /*Переменные в дизайнах
 {msg}-переменная сообщения

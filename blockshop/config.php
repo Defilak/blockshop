@@ -122,4 +122,21 @@ $clrs = array(
     'b:#40ffff:Голубой', 'c:#ff4040:Красный', 'd:#ff40ff:Розовый', 'e:#ffff40:Желтый', 'f:#ffffff:',
 );
 
-require_once 'common.php';
+
+function skl($number, $wordCases)
+{
+    $number = round($number);
+    $m = $number % 10;
+    $j = $number % 100;
+    $s = '';
+    if ($m == 1) {
+        $s = $wordCases[0];
+    }
+    if ($m >= 2 && $m <= 4) {
+        $s = $wordCases[1];
+    }
+    if ($m == 0 || $m >= 5 || ($j >= 10 && $j <= 20)) {
+        $s = $wordCases[2];
+    }
+    return $number . ' ' . $s;
+}
