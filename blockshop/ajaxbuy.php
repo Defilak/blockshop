@@ -2,32 +2,35 @@
 
 define('BLOCKSHOP', true);
 
-//define autoloader
-spl_autoload_register(function ($className) {
-    $className = str_replace("\\", DIRECTORY_SEPARATOR, $className);
-    include_once $_SERVER['DOCUMENT_ROOT'] . '/blockshop/class/' . $className . '.php';
-});
-
 include 'config.php';
+include 'design.php';
 
-include 'views/design.php';
+include_once 'ajax/responses.php';
+
+
+function super_sql_injection_field($_GET_OR_POST)
+{
+    foreach ($_GET_OR_POST as $key => $value) {
+        $_GET_OR_POST[$key] = str_replace(["'", '"', ',', '\\', '<', '>', '$', '%'], '', $value);
+    }
+    return array_map('trim', $_GET_OR_POST);
+}
 
 ///вводим глобальную защиту от sql-инъекций)))))
-foreach ($_POST as $name => $value) {
-    $_POST[$name] = str_replace(array("'", '"', ',', '\\', '<', '>', '$', '%'), '', $value);
-}
-$a = array_map('trim', $_POST);
+$a = super_sql_injection_field($_POST);
 $count = count($a);
 
+//задаем переменные пользователя
 include_once 'core/security.php';
 
-if ($group == '-1') {
-    badly("Сударь, вам не мешало бы авторизироваться!");
+if ($group == -1) {
+    responses\badly("Сударь, вам не мешало бы авторизироваться!");
 }
+
 $time = time();
 if ($count > 1) {
     $_SESSION['buytime'] = $time + 60;
-    badly("Фриз тебе на одну минуту за такие дела!");
+    responses\badly("Фриз тебе на одну минуту за такие дела!");
 }
 
 if (empty($_SESSION['buytime'])) {
@@ -58,7 +61,7 @@ if ($count == 1 and $group != '-1') {
         if (isset($a['unban'])) {
             unban();
         }
-        badly("Забаненные игроки не могут этого делать!");
+        responses\badly("Забаненные игроки не могут этого делать!");
     } elseif ($group == 15) {
         if (isset($a['history']) and $s1 = ifuser($a['history'])) {
             history($s1);
@@ -91,7 +94,7 @@ if ($count == 1 and $group != '-1') {
         back($a['delb']);
     } elseif ($_SESSION['buytime'] > $time) {
         $tm = skl($_SESSION['buytime'] - $time, array('секунду', 'секунды', 'секунд'));
-        badly("До следующей операции подождите <b>{$tm}</b>!");
+        responses\badly("До следующей операции подождите <b>{$tm}</b>!");
     } elseif (isset($a['buy'])) {
         buyblock($a['buy']);
     } elseif (isset($a['status'])) {
@@ -117,11 +120,11 @@ function buyblock($s1)
     list($s1, $s2, $ss, $s3) = explode("::", $s1);
     $s3 = ifuser($s3);
     if (!ctype_digit($s2) or $s2 == '0' or $s2 > 128 or !preg_match("|^[\d]+$|", $s1)) {
-        badly("Неверно введено количество предметов!<br>Допустимые значения от 1 до 128 шт!");
+        responses\badly("Неверно введено количество предметов!<br>Допустимые значения от 1 до 128 шт!");
     }
     $r = $db->select("SELECT * FROM {$blocks} WHERE id='{$s1}';"); ///не волнуйтесь, запрос безопасен///
     if (count($r) == 0) {
-        badly("Данный блок отсутствует в продаже!");
+        responses\badly("Данный блок отсутствует в продаже!");
     }
     ///валюты//
     if ($ss == 0) {
@@ -136,7 +139,7 @@ function buyblock($s1)
         $val = $sklrub;
     }
     if ($price == 0) {
-        badly("Данный тип валюты недоступен для покупки этого предмета!<br/>");
+        responses\badly("Данный тип валюты недоступен для покупки этого предмета!<br/>");
     }
     $amount = $r[0]['amount'] * $s2;
     ///скидки (удалите если не нужно)///
@@ -155,7 +158,7 @@ function buyblock($s1)
     }
     ///сопоставление баланса с ценой///
     if ($q < $price) {
-        badly("У Вас не хватает денег на счету для выполнения данной операции!");
+        responses\badly("У Вас не хватает денег на счету для выполнения данной операции!");
     }
     $now = $q - $price;
     $backprice = round($r[0]['price'] * $s2 / 2);
@@ -179,7 +182,7 @@ function buyblock($s1)
     }
     uptime(10);
     inlog('log.txt', " Куплен предмет <b>\"{$r[0]['name']}\"</b>{$add}. Количество: <b>{$skl3}</b>. Цена: <b>{$skl1}</b>");
-    goodly("Вы купили предмет <b>\"{$r[0]['name']}\"</b>{$add}. Количество: <b>{$skl3}</b>. Цена: <b>{$skl1}</b>.<br>{$skidka}Ваш текущий баланс <b>{$skl2}</b>.<br> Для получения вещей в игре введите команду: <b>/cart</b>");
+    responses\goodly("Вы купили предмет <b>\"{$r[0]['name']}\"</b>{$add}. Количество: <b>{$skl3}</b>. Цена: <b>{$skl1}</b>.<br>{$skidka}Ваш текущий баланс <b>{$skl2}</b>.<br> Для получения вещей в игре введите команду: <b>/cart</b>");
 }
 
 ///покупка/продление статусов///
@@ -187,14 +190,14 @@ function donate($s1)
 {
     global $username, $group, $money, $sklrub, $player_groups, $logs, $time, $db;
     if (!isset($player_groups[$s1])) {
-        badly("Данный статус не существует!");
+        responses\badly("Данный статус не существует!");
     }
 
     $name = $player_groups[$s1]['name'];
     $price = $player_groups[$s1]['price'];
     $days = $player_groups[$s1]['days'];
     if ($money < $price) {
-        badly("Недостаточно средств для покупки статуса!");
+        responses\badly("Недостаточно средств для покупки статуса!");
     }
     ///отключение///
     if ($price == 0) {
@@ -213,7 +216,7 @@ function donate($s1)
         uptime(30);
         $info = "Отказ от {$n}:n:+{$rub}:n:0:n:264.png";
         inbdlog($info);
-        goodly("Вы отказались от статуса, вам на счет вернулось <b>{$rub}</b>!");
+        responses\goodly("Вы отказались от статуса, вам на счет вернулось <b>{$rub}</b>!");
     }
 
     $s2 = skl($price, $sklrub);
@@ -230,7 +233,7 @@ function donate($s1)
         upbalance($username, "-" . round($price / 100 * 70), 1);
         upprop($username, 'buys=buys+10');
         uptime(30);
-        goodly("Вы продлили статус <b>{$name}</b> на <b>{$days}</b> дней за <b>{$s2}</b>!");
+        responses\goodly("Вы продлили статус <b>{$name}</b> на <b>{$days}</b> дней за <b>{$s2}</b>!");
     }
     ///покупка///
     pex($username, $name, $date);
@@ -238,7 +241,7 @@ function donate($s1)
     upbalance($username, "-" . $price, 1);
     upprop($username, 'buys=buys+10');
     uptime(30);
-    goodly("Вы купили статус <b>{$name}</b> на <b>{$days}</b> дней за <b>{$s2}</b>!");
+    responses\goodly("Вы купили статус <b>{$name}</b> на <b>{$days}</b> дней за <b>{$s2}</b>!");
 }
 
 ///склад////
@@ -247,7 +250,7 @@ function cart($s1)
     global $table_cart, $dir, $cartdesign, $server_names, $db, $goodly, $icons;
     $c = '';
     $m = '';
-    $m .= infly('Здесь отображается список вещей, которые вы можете забрать в игре.<br> Для получения вещей в игре используйте команду: <b>/cart</b>');
+    $m .= responses\infly('Здесь отображается список вещей, которые вы можете забрать в игре.<br> Для получения вещей в игре используйте команду: <b>/cart</b>');
     $siz = count($server_names);
     for ($i = 0, $size = $siz; $i < $size; ++$i) {
         $q = $db->select("SELECT * FROM `{$server_names[$i]}` WHERE `{$table_cart['name']}`='{$s1}'");
@@ -258,7 +261,7 @@ function cart($s1)
         }
     }
     if (empty($c)) {
-        badly('Корзина пуста!');
+        responses\badly('Корзина пуста!');
     }
     die($m . $c);
 }
@@ -269,11 +272,11 @@ function history($s1)
     global $dir, $logs, $historydesign, $db, $goodly, $icons;
     $m = '';
     $c = '';
-    $m .= infly('Здесь отображаются все совершенные вами действия в магазине за ближайшие 10 суток.');
+    $m .= responses\infly('Здесь отображаются все совершенные вами действия в магазине за ближайшие 10 суток.');
     $q = $db->select("SELECT * FROM {$logs} WHERE name='{$s1}' ORDER BY date DESC");
     $time = time() - 864000;
     if (count($q) == 0) {
-        badly('История пуста!');
+        responses\badly('История пуста!');
     }
     $search = array('{name}', '{dir}', '{img}', '{info}', '{date}', '{icons}');
     for ($i = 0; $i < count($q); $i++) {
@@ -319,16 +322,16 @@ function perevod($s1)
         $skl = $sklrub;
     }
     if ($summ < 1) {
-        badly("Очень щедро с вашей стороны!");
+        responses\badly("Очень щедро с вашей стороны!");
     }
     if (!ctype_digit($summ) or empty($name)) {
-        badly("Некорректные данные!");
+        responses\badly("Некорректные данные!");
     }
     if ($bal < $summ) {
-        badly("Недостаточно средств для перевода!");
+        responses\badly("Недостаточно средств для перевода!");
     }
     if ($summ > 1000) {
-        badly("Превышен лимит!");
+        responses\badly("Превышен лимит!");
     }
     $skl = skl($summ, $skl);
     upbalance($username, "-" . $summ, $type);
@@ -337,7 +340,7 @@ function perevod($s1)
     inbdlog($info);
     inlog('log.txt', "Перевел {$skl} игроку {$name}");
     uptime(20);
-    goodly("Вы перевели <b>{$skl}</b> игроку <b>{$name}</b>!!!");
+    responses\goodly("Вы перевели <b>{$skl}</b> игроку <b>{$name}</b>!!!");
 }
 
 ///перевод реальной валюты в игровую///
@@ -345,13 +348,13 @@ function toeco($s1)
 {
     global $username, $money, $skleco, $sklrub, $exchangeFactor;
     if ($s1 > 200) {
-        badly("Слишком большая сумма для перевода!");
+        responses\badly("Слишком большая сумма для перевода!");
     }
     if (!preg_match("|^[\d]+$|", $s1) or $s1 < 1) {
-        badly("Некорректные данные!");
+        responses\badly("Некорректные данные!");
     }
     if ($money < $s1) {
-        badly("Недостаточно средств для перевода!");
+        responses\badly("Недостаточно средств для перевода!");
     }
     $s2 = $s1 * $exchangeFactor;
     upbalance($username, "-" . $s1, '1');
@@ -362,7 +365,7 @@ function toeco($s1)
     inbdlog($info);
     inlog('log.txt', "Превратил {$skl1} в {$skl2}");
     uptime(20);
-    goodly("Вы превратили <b>{$skl1}</b> в <b>{$skl2}</b>!");
+    responses\goodly("Вы превратили <b>{$skl1}</b> в <b>{$skl2}</b>!");
 }
 
 ///разбан///
@@ -370,10 +373,10 @@ function unban()
 {
     global $money, $group, $bans, $banlist, $username, $bancount, $sklrub, $db;
     if ($bancount == count($bans)) {
-        badly("Кол-во разбанов исчерпано!");
+        responses\badly("Кол-во разбанов исчерпано!");
     }
     if ($money < $bans[$bancount]) {
-        badly("Недостаточно средств для покупки разбана!");
+        responses\badly("Недостаточно средств для покупки разбана!");
     }
     $price = $bans[$bancount];
     $count = $bancount + 1;
@@ -385,7 +388,7 @@ function unban()
     upprop($username, 'bancount=' . $count . ',buys=0');
     inlog('admin.txt', "Купил {$count} разбан");
     uptime(20);
-    goodly("Вы купили <b>{$count}</b> разбан за <b>{$skl}</b>!");
+    responses\goodly("Вы купили <b>{$count}</b> разбан за <b>{$skl}</b>!");
 }
 
 ///баланс///
@@ -408,11 +411,11 @@ function back($ss)
     global $username, $group, $table_cart, $skleco, $server_names, $db;
     list($s1, $s2) = explode(":", $ss);
     if (!ctype_digit($s1) or !in_array($s2, $server_names)) {
-        badly("Некорректные данные!");
+        responses\badly("Некорректные данные!");
     }
     $q = $db->select("SELECT price from `{$s2}` where id='{$s1}' and `{$table_cart['name']}`='{$username}'");
     if (count($q) != 1) {
-        badly("Указанный блок не найден!");
+        responses\badly("Указанный блок не найден!");
     }
     $backprice = $q[0]['price'];
     $skl = skl($backprice, $skleco);
@@ -421,7 +424,7 @@ function back($ss)
     inbdlog($info);
     upbalance($username, "+" . $backprice, 0);
     inlog('log.txt', "Возвращено {$skl} из корзины!");
-    goodly("Блок успешно удален! Возвращено на игровой счет: <b>{$skl}<b>");
+    responses\goodly("Блок успешно удален! Возвращено на игровой счет: <b>{$skl}<b>");
 }
 
 ///добавление префикса и суффикса///
@@ -430,11 +433,11 @@ function prefix($s1)
     global $username, $db;
     list($color, $prefix, $nick, $suffix) = explode(":", $s1);
     if (!preg_match("|^([0-9\a-f]{1,1})$|is", $color) or !preg_match("|^([0-9\a-z]{1,10})$|is", $prefix) or !preg_match("|^([0-9\a-f]{1,1})$|is", $nick) or !preg_match("|^([0-9\a-f]{1,1})$|is", $suffix)) {
-        badly("Некорректный префикс или суффикс!");
+        responses\badly("Некорректный префикс или суффикс!");
     }
     $info = '&' . $color . '[' . $prefix . ']&' . $nick;
     $db->update("UPDATE permissions_entity set prefix='{$info}',suffix='&{$suffix}' where name='{$username}'");
-    goodly("Ваш префикс и суффикс успешно изменен!");
+    responses\goodly("Ваш префикс и суффикс успешно изменен!");
 }
 
 ///удаление скина/плаща///
@@ -446,10 +449,10 @@ function removeskin($s1)
         unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $path_skin . $username . '.png');
         unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $path_skin . '1/' . $username . '.png');
         unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $path_skin . '2/' . $username . '.png');
-        goodly("Скин удален!");
+        responses\goodly("Скин удален!");
     } else {
         unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $path_cloak . $username . '.png');
-        goodly("Плащ удален!");
+        responses\goodly("Плащ удален!");
     }
 }
 
@@ -602,11 +605,11 @@ function setstatus($s1)
     if ($id == 'ban') {
         $time = time();
         $db->insert("INSERT into banlist (name,reason,admin,time,temptime,id) values ('{$name}','Забанен админом','{$username}','{$time}','0',NULL)");
-        goodly("Игрок <b>{$name}</b> забанен!");
+        responses\goodly("Игрок <b>{$name}</b> забанен!");
     }
     $name = ifuser($name);
     if (!isset($player_groups[$id])) {
-        badly("Данная группа не существует!");
+        responses\badly("Данная группа не существует!");
     }
     $n = $player_groups[$id]['name'];
     $p = $player_groups[$id]['price'];
@@ -622,7 +625,7 @@ function setstatus($s1)
         pex($name, $n, (time() + 1000000));
     }
     inlog('admin.txt', "Игроку {$name} установлена группа {$id}");
-    goodly("Статус <b>{$n}</b> установлен игроку <b>{$name}</b>!");
+    responses\goodly("Статус <b>{$n}</b> установлен игроку <b>{$name}</b>!");
 }
 
 function addmoney($s1)
@@ -631,7 +634,7 @@ function addmoney($s1)
     list($type, $summ, $name) = explode(":", $s1);
     $name = ifuser($name);
     if (!ctype_digit($summ)) {
-        badly("Некорректные данные");
+        responses\badly("Некорректные данные");
     }
     if ($type == 1) {
         $type = 'money';
@@ -640,7 +643,7 @@ function addmoney($s1)
     }
     $db->update("UPDATE `{$table_economy['table']}` set `{$table_economy[$type]}`='{$summ}' where `{$table_economy['name']}`='{$name}'");
     inlog('admin.txt', "Игроку {$name} дано {$summ} {$table_economy[$type]}");
-    goodly("Валюта установлена игроку <b>{$name}</b>!");
+    responses\goodly("Валюта установлена игроку <b>{$name}</b>!");
 }
 
 function edituser($s1)
@@ -697,16 +700,16 @@ function edit($s1)
         !ctype_digit($price) or !ctype_digit($realprice) or !ctype_digit($mid) or !ctype_digit($action) or $action < 0 or $action > 99 or !ctype_digit($amount) or $amount < 1 or !isset($server_names[$server]) or !isset($cat[$category]) or
         !preg_match("|^([0-9\.\:\-\a-z]{1,8})$|is", $blockid) or !file_exists('images/' . $image) or empty($image)
     ) {
-        badly("В полях ввода обнаружены запрещенные символы!");
+        responses\badly("В полях ввода обнаружены запрещенные символы!");
     }
     if ($mid != 0) {
         $db->update("UPDATE {$blocks} SET image='{$image}', block_id='{$blockid}', amount='{$amount}', price='{$price}', realprice='{$realprice}', name='{$name}', action='{$action}', server='{$server_names[$server]}', category='{$cat[$category]}', info='{$ench}' WHERE id='{$mid}';");
         inlog('admin.txt', "Отредактирован блок под id: {$blockid}");
-        goodly("Вы успешно отредактировали блок под ID: " . $blockid);
+        responses\goodly("Вы успешно отредактировали блок под ID: " . $blockid);
     } else {
         $db->insert("INSERT INTO {$blocks}(id,image,block_id,amount,price,realprice,name,action,server,category,info) VALUES (NULL, '{$image}', '{$blockid}', '{$amount}', '{$price}', '{$realprice}', '{$name}', '{$action}', '{$server_names[$server]}', '{$cat[$category]}','{$ench}');");
         inlog('admin.txt', "Добавлен блок под id: {$blockid}");
-        goodly("Вы успешно добавили блок под ID: " . $blockid);
+        responses\goodly("Вы успешно добавили блок под ID: " . $blockid);
     }
 }
 
@@ -714,7 +717,7 @@ function admin($s1)
 {
     global $dir, $blocks, $admlist, $admbox, $admcont, $db, $icons;
     if (!ctype_digit($s1)) {
-        badly("Неверно заполнено одно из полей!");
+        responses\badly("Неверно заполнено одно из полей!");
     }
     ///массив изображений блоков
     $files = scandir($icons);
@@ -759,11 +762,11 @@ function delblock($s1)
 {
     global $blocks, $db;
     if (!ctype_digit($s1)) {
-        badly("Обнаружены некорректные символы!");
+        responses\badly("Обнаружены некорректные символы!");
     }
     $db->delete("DELETE FROM {$blocks} WHERE id='{$s1}';");
     inlog('admin.txt', "Удален блок под id: {$s1}");
-    goodly("Блок успешно удален!");
+    responses\goodly("Блок успешно удален!");
 }
 
 ///побочные функции///
@@ -777,7 +780,7 @@ function ifuser($s1)
     if (count($q) == 1) {
         return $s1;
     } else {
-        badly("Пользователь с данным именем не найден!");
+        responses\badly("Пользователь с данным именем не найден!");
     }
 }
 
@@ -810,24 +813,6 @@ function pex($s1, $s2, $s3)
     $db->insert("INSERT INTO permissions (id, name, type, permission, world, value) VALUES (NULL, '{$s1}', '1', 'group-{$s2}-until', '', '{$s3}')");
     $db->insert("INSERT INTO permissions_inheritance (id, child, parent, type, world) VALUES (NULL, '{$s1}', '{$s2}', '1', NULL)");
     $db->insert("INSERT INTO permissions_entity (id, name, type, prefix, suffix) VALUES (NULL, '{$s1}','1', '&2[{$s2}]', '&f')");
-}
-
-function goodly($s1)
-{
-    global $mess;
-    die(str_replace(array('{type}', '{msg}'), array('goodly', $s1), $mess));
-}
-
-function badly($s1)
-{
-    global $mess;
-    die(str_replace(array('{type}', '{msg}'), array('badly', $s1), $mess));
-}
-
-function infly($s1)
-{
-    global $mess;
-    return (str_replace(array('{type}', '{msg}'), array('infly', $s1), $mess));
 }
 
 function inlog($s1, $s2)

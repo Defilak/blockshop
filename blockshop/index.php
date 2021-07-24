@@ -1,14 +1,9 @@
 <?php
 
-//define autoloader
-spl_autoload_register(function ($className) {
-    $className = str_replace("\\", DIRECTORY_SEPARATOR, $className);
-    include_once $_SERVER['DOCUMENT_ROOT'] . '/blockshop/class/' . $className . '.php';
-});
-
 define('BLOCKSHOP', true);
+
 require_once 'config.php';
-require_once 'views/design.php';
+require_once 'design.php';
 require_once 'router.php';
 
 

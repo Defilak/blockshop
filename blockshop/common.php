@@ -47,6 +47,7 @@ function skl($number, $wordCases)
     $number = round($number);
     $m = $number % 10;
     $j = $number % 100;
+    $s = '';
     if ($m == 1) {
         $s = $wordCases[0];
     }

@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Проверка сессии и установка переменных игрока.
  */
+
 namespace security;
 
 use User;
@@ -17,16 +19,28 @@ function user_from_session(): User
 }
 
 if (!has_session()) {
-    _exit_with_template('auth1');
+    _exit_with_template('auth');
 }
 
-$user = user_from_session();
-$username = $user->username;
+$user = null;
+$username = 'Не игрок';
+$economy = null;
+$money = 0;
+$iconomy = 0;
+$group = -1;
+$bancount = 0;
+$buys = 0;
+$ban = 0;
 
-$economy = $user->getEconomy();
-$money = $economy->money;
-$iconomy = $economy->balance;
-$group = $economy->group;
-$bancount = $economy->bancount;
-$buys = $economy->buys;
-$ban = $user->getBanEntry() ? 1 : 0;
+if (has_session()) {
+    $user = user_from_session();
+    $username = $user->username;
+
+    $economy = $user->getEconomy();
+    $money = $economy->money;
+    $iconomy = $economy->balance;
+    $group = $economy->group;
+    $bancount = $economy->bancount;
+    $buys = $economy->buys;
+    $ban = $user->getBanEntry() ? 1 : 0;
+}
