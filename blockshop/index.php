@@ -7,7 +7,6 @@ spl_autoload_register(function ($className) {
 });
 
 define('BLOCKSHOP', true);
-require_once 'config/config.php';
 require_once 'config.php';
 require_once 'views/design.php';
 require_once 'router.php';

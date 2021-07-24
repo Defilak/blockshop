@@ -19,7 +19,7 @@ if (is_numeric($category_id) && isset($shop_categories[$category_id]) && $shop_c
     $category = '%%%%';
 }
 
-$stmt = $pdo->prepare("SELECT * FROM {$blocks} WHERE server = :server and category LIKE :category ORDER BY id");
+$stmt = DB::prepare("SELECT * FROM {$blocks} WHERE server = :server and category LIKE :category ORDER BY id");
 $stmt->bindValue(':server', $current_server);
 $stmt->bindValue(':category', $category);
 $stmt->execute();

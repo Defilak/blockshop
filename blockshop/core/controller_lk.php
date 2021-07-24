@@ -15,7 +15,7 @@ if ($group == 15) {
 }
 
 // проверяем время окончания статуса
-$stmt = $pdo->prepare("SELECT value FROM permissions WHERE name = :username AND permission = :permission");
+$stmt = DB::prepare("SELECT value FROM permissions WHERE name = :username AND permission = :permission");
 $stmt->bindValue(':username', $username);
 $stmt->bindValue(':permission', "group-{$user_group['name']}-until");
 $stmt->execute();

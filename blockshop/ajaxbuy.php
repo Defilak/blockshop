@@ -27,6 +27,24 @@ if(empty($_SESSION['buytime'])) {
     $_SESSION['buytime'] = 0;
 }
 
+
+
+// Подключение к mysqli
+require_once 'lib/class.simpleDB.php';
+require_once 'lib/class.simpleMysqli.php';
+require_once 'class/DB.php';
+
+$mysqli_settings = array(
+    'server' => $mysql_host,
+    'username' => $mysql_user,
+    'password' => $mysql_pass,
+    'db' => $mysql_db,
+    'port' => '3306',
+    'charset' => $charset,
+);
+
+$db = new simpleMysqli($mysqli_settings);
+
 //////Условия использования функций///////
 if ($count == 1 and $group != '-1') {
     if ($ban == 1) {

@@ -13,7 +13,7 @@ if (empty($_SESSION['shopname'])) {
 $username = isset($_SESSION['shopname']) ? $_SESSION['shopname'] : null;
 if ($username) {
     try {
-        $stmt = $pdo->prepare("SELECT * FROM `{$table_economy['table']}` WHERE `{$table_economy['name']}`= :name;");
+        $stmt = DB::prepare("SELECT * FROM `{$table_economy['table']}` WHERE `{$table_economy['name']}`= :name;");
         $stmt->bindValue(':name', $username);
         $stmt->execute();
 
@@ -21,7 +21,7 @@ if ($username) {
         //create row if no exists
         $user = $stmt->fetch();
         if(empty($user)) {
-            $stmt_insert = $pdo->prepare("INSERT INTO `{$table_economy['table']}` (id,`{$table_economy['name']}`,`{$table_economy['balance']}`) VALUES (NULL, :name,:nominal);");
+            $stmt_insert = DB::prepare("INSERT INTO `{$table_economy['table']}` (id,`{$table_economy['name']}`,`{$table_economy['balance']}`) VALUES (NULL, :name,:nominal);");
             $stmt_insert->bindValue(':name', $username);
             $stmt_insert->bindValue(':nominal', $nominal);
             $stmt_insert->execute();
@@ -41,7 +41,7 @@ if ($username) {
 
         //todo: join
         //check if banned 
-        $stmt_banned = $pdo->prepare("SELECT * FROM {$banlist} WHERE name= :name;");
+        $stmt_banned = DB::prepare("SELECT * FROM {$banlist} WHERE name= :name;");
         $stmt_banned->bindValue(':name', $username);
         $stmt_banned->execute();
 
