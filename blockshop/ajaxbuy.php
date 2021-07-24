@@ -8,10 +8,8 @@ include 'design.php';
 include_once 'ajax/responses.php';
 
 
-require_once 'class/DB.php';
 require_once 'lib/class.simpleDB.php';
 require_once 'lib/class.simpleMysqli.php';
-
 $db_config = config('database');
 $db = new simpleMysqli([
     'server' => $db_config['host'],
@@ -23,6 +21,7 @@ $db = new simpleMysqli([
 ]);
 
 
+
 function super_sql_injection_shield($_GET_OR_POST)
 {
     foreach ($_GET_OR_POST as $key => $value) {
@@ -32,7 +31,9 @@ function super_sql_injection_shield($_GET_OR_POST)
 }
 
 ///вводим глобальную защиту от sql-инъекций)))))
-$a = super_sql_injection_shield($_POST);
+$a = super_sql_injection_shield(count($_POST) != 0 ? $_POST : $_GET);
+print_r($a);
+
 $args_count = count($a);
 
 //задаем переменные пользователя
@@ -43,25 +44,46 @@ if ($group == -1) {
 }
 
 // Кулдаун на действия
-include_once 'ajax/cooldown.php';
+$cooldown = include_once 'ajax/cooldown.php';
 
-//ставим кулдаун на действия
-/*$time = time();
-if ($args_count > 1) {
-    $_SESSION['buytime'] = $time + 60;
-    responses\badly("Фриз тебе на одну минуту за такие дела!");
+//должен быть только один аргумент
+if ($args_count != 1) {
+    $cooldown->update(60);
+    responses\badly('Фриз тебе на одну минуту за такие дела!');
 }
 
-if (empty($_SESSION['buytime'])) {
-    $_SESSION['buytime'] = 0;
+/**
+ * route cant be null
+ *
+ * @param [array] $args
+ */
+function load_action(string $route): ?callable
+{
+    //фильтрация имени файла что будем загружать
+    $route = str_replace(['.', '/'], '', $route);
+
+    // если есть файл с таким же именем в папке actions
+    $action_list = scandir(blockshop_root('ajax/actions/'));
+    if (in_array($route . '.php', $action_list)) {
+        return include_once blockshop_root("ajax/actions/$route.php");
+    }
+
+    return null;
 }
-*/
+
+$route = array_key_first($a);
+$value = $a[$route];
 
 
+$action = load_action($route);
+if ($action) {
+}
 
-
-//////Условия использования функций///////
-if ($args_count == 1 and $group != '-1') {
+//print_r(ajax_action($a));
+die;
+// Если аргумент 1 и есть игрок
+// это условие можно убрать
+if ($args_count == 1 && $group > -1) {
     if ($ban == 1) {
         if (isset($a['unban'])) {
             unban();
@@ -71,7 +93,9 @@ if ($args_count == 1 and $group != '-1') {
         if (isset($a['history']) and $s1 = ifuser($a['history'])) {
             history($s1);
         } elseif (isset($a['cart']) and $s1 = ifuser($a['cart'])) {
-            cart($s1);
+            $cart = include_once 'cart.php';
+            $cart($s1);
+            //cart($s1);
         } elseif (isset($a['admin'])) {
             admin($a['admin']);
         } elseif (isset($a['edit'])) {
@@ -86,20 +110,25 @@ if ($args_count == 1 and $group != '-1') {
             setstatus($a['setstatus']);
         }
     }
+
     if (isset($a['giveskin'])) {
         sleep(10);
         giveskin();
     } elseif (isset($a['balance'])) {
         balance($a['balance']);
     } elseif (isset($a['cart'])) {
-        cart($username);
+        $cart = include_once 'ajax/cart.php';
+        $cart($username);
     } elseif (isset($a['history'])) {
         history($username);
     } elseif (isset($a['delb'])) {
         back($a['delb']);
-    } elseif ($_SESSION['buytime'] > $time) {
+    } /*elseif ($_SESSION['buytime'] > $time) {
         $tm = skl($_SESSION['buytime'] - $time, array('секунду', 'секунды', 'секунд'));
         responses\badly("До следующей операции подождите <b>{$tm}</b>!");
+    }*/ elseif ($cooldown->check()) {
+        $time_left = $cooldown->remaining();
+        responses\bad("До следующей операции подождите <b>{$time_left}</b>!");
     } elseif (isset($a['buy'])) {
         buyblock($a['buy']);
     } elseif (isset($a['status'])) {
@@ -119,7 +148,7 @@ if ($args_count == 1 and $group != '-1') {
 ///покупка предмета
 function buyblock($s1)
 {
-    global $blocks, $money, $iconomy, $table_cart, $logs, $username, $sklrub, $skleco, $db, $buys;
+    global $blocks, $money, $iconomy, $table_cart, $logs, $username, $sklrub, $skleco, $db, $buys, $cooldown;
     $add = '';
     $skidka = '';
     list($s1, $s2, $ss, $s3) = explode("::", $s1);
@@ -185,7 +214,7 @@ function buyblock($s1)
     } else {
         $db->insert("INSERT INTO `{$r[0]['server']}`(id,`{$table_cart['name']}`,`{$table_cart['item']}`,`{$table_cart['amount']}`, img, name, price) VALUES (NULL, '{$s3}','{$r[0]['block_id']}','{$amount}', '{$r[0]['image']}', '{$r[0]['name']}','{$backprice}');");
     }
-    uptime(10);
+    $cooldown->update(10);
     inlog('log.txt', " Куплен предмет <b>\"{$r[0]['name']}\"</b>{$add}. Количество: <b>{$skl3}</b>. Цена: <b>{$skl1}</b>");
     responses\goodly("Вы купили предмет <b>\"{$r[0]['name']}\"</b>{$add}. Количество: <b>{$skl3}</b>. Цена: <b>{$skl1}</b>.<br>{$skidka}Ваш текущий баланс <b>{$skl2}</b>.<br> Для получения вещей в игре введите команду: <b>/cart</b>");
 }
@@ -193,7 +222,7 @@ function buyblock($s1)
 ///покупка/продление статусов///
 function donate($s1)
 {
-    global $username, $group, $money, $sklrub, $player_groups, $logs, $time, $db;
+    global $username, $group, $money, $sklrub, $player_groups, $logs, $time, $db, $cooldown;
     if (!isset($player_groups[$s1])) {
         responses\badly("Данный статус не существует!");
     }
@@ -218,7 +247,7 @@ function donate($s1)
         $rub = skl($price, $sklrub);
         upgroup($username, $s1);
         upbalance($username, "+" . $price, 1);
-        uptime(30);
+        $cooldown->update(30);
         $info = "Отказ от {$n}:n:+{$rub}:n:0:n:264.png";
         inbdlog($info);
         responses\goodly("Вы отказались от статуса, вам на счет вернулось <b>{$rub}</b>!");
@@ -237,7 +266,7 @@ function donate($s1)
         inlog('log.txt', "Продлен статус {$name}");
         upbalance($username, "-" . round($price / 100 * 70), 1);
         upprop($username, 'buys=buys+10');
-        uptime(30);
+        $cooldown->update(30);
         responses\goodly("Вы продлили статус <b>{$name}</b> на <b>{$days}</b> дней за <b>{$s2}</b>!");
     }
     ///покупка///
@@ -245,31 +274,10 @@ function donate($s1)
     inlog('log.txt', "Установлен статус {$name}");
     upbalance($username, "-" . $price, 1);
     upprop($username, 'buys=buys+10');
-    uptime(30);
+    $cooldown->update(30);
     responses\goodly("Вы купили статус <b>{$name}</b> на <b>{$days}</b> дней за <b>{$s2}</b>!");
 }
 
-///склад////
-function cart($s1)
-{
-    global $table_cart, $dir, $cartdesign, $server_names, $db, $goodly, $icons;
-    $c = '';
-    $m = '';
-    $m .= responses\infly('Здесь отображается список вещей, которые вы можете забрать в игре.<br> Для получения вещей в игре используйте команду: <b>/cart</b>');
-    $siz = count($server_names);
-    for ($i = 0, $size = $siz; $i < $size; ++$i) {
-        $q = $db->select("SELECT * FROM `{$server_names[$i]}` WHERE `{$table_cart['name']}`='{$s1}'");
-        $search = array('{id}', '{name}', '{dir}', '{img}', '{amount}', '{srv}', '{icons}');
-        for ($u = 0; $u < count($q); $u++) {
-            $replace = array($q[$u]['id'], $q[$u]['name'], $dir, $q[$u]['img'], $q[$u][$table_cart['amount']], $server_names[$i], $icons);
-            $c .= str_replace($search, $replace, $cartdesign);
-        }
-    }
-    if (empty($c)) {
-        responses\badly('Корзина пуста!');
-    }
-    die($m . $c);
-}
 
 ///история///
 function history($s1)
@@ -316,7 +324,7 @@ function giveskin()
 ///перевод другому игроку///
 function perevod($s1)
 {
-    global $username, $iconomy, $money, $skleco, $sklrub;
+    global $username, $iconomy, $money, $skleco, $sklrub, $cooldown;
     list($name, $summ, $type) = explode("::", $s1);
     $name = ifuser($name);
     if ($type == 0) {
@@ -344,14 +352,14 @@ function perevod($s1)
     $info = "{$name}:n:{$skl}:n:0:n:264.png";
     inbdlog($info);
     inlog('log.txt', "Перевел {$skl} игроку {$name}");
-    uptime(20);
+    $cooldown->update(20);
     responses\goodly("Вы перевели <b>{$skl}</b> игроку <b>{$name}</b>!!!");
 }
 
 ///перевод реальной валюты в игровую///
 function toeco($s1)
 {
-    global $username, $money, $skleco, $sklrub, $exchangeFactor;
+    global $username, $money, $skleco, $sklrub, $exchangeFactor, $cooldown;
     if ($s1 > 200) {
         responses\badly("Слишком большая сумма для перевода!");
     }
@@ -369,14 +377,14 @@ function toeco($s1)
     $info = "Перевод:n:{$s1}{$sklrub['3']} в {$s2}{$skleco['3']}:n:0:n:264.png";
     inbdlog($info);
     inlog('log.txt', "Превратил {$skl1} в {$skl2}");
-    uptime(20);
+    $cooldown->update(20);
     responses\goodly("Вы превратили <b>{$skl1}</b> в <b>{$skl2}</b>!");
 }
 
 ///разбан///
 function unban()
 {
-    global $money, $group, $bans, $banlist, $username, $bancount, $sklrub, $db;
+    global $money, $group, $bans, $banlist, $username, $bancount, $sklrub, $db, $cooldown;
     if ($bancount == count($bans)) {
         responses\badly("Кол-во разбанов исчерпано!");
     }
@@ -392,7 +400,7 @@ function unban()
     $db->delete("DELETE from {$banlist} where name='{$username}'");
     upprop($username, 'bancount=' . $count . ',buys=0');
     inlog('admin.txt', "Купил {$count} разбан");
-    uptime(20);
+    $cooldown->update(20);
     responses\goodly("Вы купили <b>{$count}</b> разбан за <b>{$skl}</b>!");
 }
 
@@ -595,7 +603,7 @@ if (isset($_FILES['skin'])) {
         if ($way_cloak) {
             imagedestroy($cloak);
         }
-        uptime(30);
+        $cooldown->update(30);
         exit();
     } else {
         die('Неверное разрешение');
@@ -836,12 +844,6 @@ function inbdlog($s1)
     global $logs, $username, $db;
     $time = time();
     $db->insert("INSERT into {$logs} (name,info,date) VALUES ('{$username}','{$s1}','{$time}')");
-}
-
-function uptime($s1)
-{
-    global $_SESSION;
-    $_SESSION['buytime'] = time() + $s1;
 }
 
 function imageflip(&$result, &$img, $rx = 0, $ry = 0, $x = 0, $y = 0, $size_x = null, $size_y = null)
