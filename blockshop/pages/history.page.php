@@ -11,33 +11,34 @@ if ($group == -1) {
     return false;
 }
 
-//История покупок
-return function ($s1) {
-    global $dir, $logs, $historydesign, $db, $success, $icons;
-    $m = '';
-    $c = '';
-    $m .= responses\infly('Здесь отображаются все совершенные вами действия в магазине за ближайшие 10 суток.');
-    $stmt = DB::prepare("SELECT * FROM {$logs} WHERE name='{$s1}' ORDER BY date DESC");
+return function ($username) {
+    global $logs;
+
+    $stmt = DB::prepare("SELECT * FROM {$logs} WHERE name= :username AND date > :date ORDER BY date DESC");
+    $stmt->bindValue(':username', $username);
+    $stmt->bindValue(':date', time() - 864000);
     $stmt->execute();
-    $q = $stmt->fetchAll();
 
+    $result = [];
+    while ($row = $stmt->fetch()) {
 
-    $time = time() - 864000;
-    if (count($q) == 0) {
-        responses\warning('История пуста!');
-    }
-    $search = array('{name}', '{dir}', '{img}', '{info}', '{date}', '{icons}');
-    for ($i = 0; $i < count($q); $i++) {
-        $d = date('j.m.Y H:i:s', $q[$i]['date']);
-        list($n, $a, $p, $l) = explode(":n:", $q[$i]['info']);
-        if ($p != 0) {
-            $g = '<b>' . skl($a, array('штука', 'штуки', 'штук')) . ' за ' . $p . '</b>';
+        [$name, $amount, $price, $img] = explode(':n:', $row['info']);
+        
+        if($price != 0) {
+            $info = skl($amount, array('штука', 'штуки', 'штук')) . ' за ' . $price;
         } else {
-            $g = '<b>' . $a . '</b>';
+            $info = $amount;
         }
-        $replace = array($n, $dir, $l, $g, $d, blockshop_public($icons));
-        $c .= str_replace($search, $replace, $historydesign);
+
+        $result[] = [
+            'name' => $name,
+            'img' => $img,
+            'info' => $info,
+            'date' => date('j.m.Y H:i:s', $row['date'])
+        ];
     }
-    DB::prepare("DELETE from {$logs} where date<{$time}")->execute();
-    die($m . $c);
+
+    _exit_with_template('history', [
+        'result' => $result
+    ]);
 };

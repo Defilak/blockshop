@@ -24,8 +24,6 @@ return function ($username) {
         $stmt->bindValue(':username', $username);
         $stmt->execute();
 
-        //$result = $stmt->fetchAll();
-
         while($row = $stmt->fetch()) {
             $result[] = [
                 'id' => $row['id'],
@@ -49,5 +47,4 @@ return function ($username) {
         'message' => $message,
         'icons' => $icons
     ]);
-
 };
