@@ -10,8 +10,8 @@ include_once 'ajax/responses.php';
 include_once 'ajax/cooldown.php';
 
 //убрать, юзать DB
-require_once 'lib/class.simpleDB.php';
-require_once 'lib/class.simpleMysqli.php';
+require_once 'core/lib/class.simpleDB.php';
+require_once 'core/lib/class.simpleMysqli.php';
 $db_config = config('database');
 $db = new simpleMysqli([
     'server' => $db_config['host'],

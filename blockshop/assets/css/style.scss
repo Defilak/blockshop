@@ -116,3 +116,53 @@ body {
         margin-bottom: unset;
     }
 }
+
+.cart-page {
+    .cart-container {
+        .cart-item {
+            width: 150px;
+            height: 150px;
+            font-size: 10px;
+            position: relative;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+
+            .cart-item-delete {
+                display: block;
+                border: none;
+                height: 13px;
+                width: 13px;
+                position:absolute;
+                top:3px;
+                background: url('/blockshop/assets/img/delete.png') no-repeat scroll 0 0 transparent;
+                right: 3px;
+            }
+
+            .uk {
+                background: url("/blockshop/assets/img/delete.png") no-repeat scroll 0 0 transparent;
+                right: 3px;
+            }
+            .um {
+                background: url("/blockshop/assets/img/editblock.png") no-repeat scroll 0 0 transparent;
+                left: 3px;
+            }
+            .ud {
+                transition: all 0.2s ease 0s;
+                border: 0 none;
+                display: block;
+                height: 13px !important;
+                opacity: 1;
+                padding: 0;
+                position: absolute;
+                top: 3px;
+                width: 13px !important;
+            }
+            .ud:hover {
+                opacity: 0.9;
+            }
+        }
+    }
+}

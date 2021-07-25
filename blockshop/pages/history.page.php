@@ -1,7 +1,9 @@
 <?php
 
 namespace pages;
+
 include_once 'ajax/responses.php';
+
 use DB;
 use responses;
 
