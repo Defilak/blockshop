@@ -35,16 +35,8 @@ return function ($username) {
         }
     }
 
-    $message = '';
-    if(empty($result)) {
-        $message = responses\badly('Корзина пуста!');
-    } else {
-        $message = responses\infly('Здесь отображается список вещей, которые вы можете забрать в игре.<br> Для получения вещей в игре используйте команду: <b>/cart</b>');
-    }
-
     _exit_with_template('cart', [
         'result' => $result,
-        'message' => $message,
         'icons' => $icons
     ]);
 };

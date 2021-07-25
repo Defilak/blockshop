@@ -13,7 +13,7 @@
                     <b><?= $product['name'] ?></b>
                     <br />
                     <img src="/<?= "{$icons}{$product['image']}" ?>"><br />
-                    <b><?= get_display_price($product) ?> за <?= $product['amount'] ?> шт.</b>
+                    <b><?= pages\get_display_price($product) ?> за <?= $product['amount'] ?> шт.</b>
                     <br>Кол-во: <input type="number" style="width:50px;" id="p<?= $product['id'] ?>" onkeyup="this.value=this.value.replace(/[^\d\.]+/g,'');" value="1"> шт.<br />
                     <br>
                     <input type="button" class="button" value="Купить" onclick="buy('<?= $product['id'] ?>');" style="width:50%">

@@ -1,5 +1,12 @@
 <?php
 
+namespace pages;
+
+include_once 'ajax/responses.php';
+
+use DB;
+use responses;
+
 
 function get_display_price($product)
 {
@@ -14,8 +21,8 @@ function get_display_price($product)
     }
 }
 
-$server_list = array('Medieval', 'Imphar'); ///массив серверов(первое по умолчанию) $s
-$shop_categories = array('Все', 'Блоки', 'Инструменты', 'Еда', 'Оружие', 'Одежда'); ///массив категорий (первое значение выводит все блоки) $cat
+$server_list = array('Medieval', 'Imphar'); ///массив серверов(первое по умолчанию) 
+$shop_categories = array('Все', 'Блоки', 'Инструменты', 'Еда', 'Оружие', 'Одежда'); ///массив категорий (первое значение выводит все блоки)
 
 $server_id = '';
 $category_id = '';
@@ -44,5 +51,4 @@ _exit_with_template('shop', [
     'result' => $result,
     'group' => $group,
     'icons' => $icons
-
 ]);
