@@ -62,31 +62,11 @@ $table_economy = [ //игровая валюта(таблица, колонка 
     'money' => 'money'
 ];
 
-$player_groups = [ // Донатские группы
-    [
-        'name' => 'Игрок',
-        'price' => 0,
-        'days' => 0,
-        'hd' => false
-    ],
-    [
-        'name' => 'Silver',
-        'price' => 100,
-        'days' => 0,
-        'hd' => false
-    ],
-    [
-        'name' => 'Gold',
-        'price' => 200,
-        'days' => 30,
-        'hd' => true
-    ],
-];
+// Донатские группы
+$player_groups = config('player_groups');
 
-$server_names = [ // Названия серверов (первое по умолчанию)
-    'Medieval',
-    'Imphar'
-];
+// Названия серверов (первое по умолчанию)
+$server_names = config('servers');
 
 
 $cat = array('Все', 'Блоки', 'Инструменты', 'Еда', 'Оружие', 'Одежда'); ///массив категорий (первое значение выводит все блоки)
