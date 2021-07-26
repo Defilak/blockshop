@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Pattern: Active Record.
  */
@@ -129,13 +128,18 @@ abstract class ActiveRecordEntity
             $entities = DB::query($query, $params2values, static::class);
         } else {
             //TODO: laravel-style args
-            $args = [];
-            foreach ($array as $entry) {
-                $args[] = $entry[0] . ' ' . $entry[1] . ' ' . $entry[2];
-            }
+            $columns2params = [];
+            $params2values = [];
 
-            $query = "SELECT * FROM `" . static::getTableName() . "` WHERE " . implode(' AND ', $args);
-            //$entities = DB::query($query, $params2values);//todo
+            foreach($array as $whereArgs) {
+                $param = ':param'.$whereArgs[0];
+                $columns2params[] = $whereArgs[0] . ' '.$whereArgs[1].' '.$param;
+                $params2values[$param] = $whereArgs[2];
+
+            }
+            
+            $query = "SELECT * FROM `" . static::getTableName() . "` WHERE " . implode(' AND ', $columns2params);
+            $entities = DB::query($query, $params2values, static::class);
         }
 
         return $entities;

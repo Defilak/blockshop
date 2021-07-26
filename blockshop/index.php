@@ -60,9 +60,13 @@ if (isset($_POST['banlist'])) {
 
 ////магазин блоков///
 if (isset($_POST['shop'])) {
-    $s1 = $_POST['shop'];
+    $page = require_once 'pages/shop.page.php';
+    if ($page) {
+        $page($_POST['shop']);
+    }
+    /*$s1 = $_POST['shop'];
     include 'pages/shop.page.php';
-    die;
+    die;*/
 }
 
 if (isset($_POST['shop']) & isset($_POST['banlist'])) {
