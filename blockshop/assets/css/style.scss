@@ -117,6 +117,40 @@ body {
     }
 }
 
+.shop-item {
+    width: 150px;
+    height: 150px;
+    font-size: 10px;
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    .shop-item-delete {
+        display: block;
+        border: none;
+        height: 13px;
+        width: 13px;
+        position: absolute;
+        top: 3px;
+        background: url("/blockshop/assets/img/delete.png") no-repeat scroll 0 0 transparent;
+        right: 3px;
+    }
+
+    .shop-item-edit {
+        display: block;
+        border: none;
+        height: 13px;
+        width: 13px;
+        position: absolute;
+        top: 3px;
+        background: url("/blockshop/assets/img/editblock.png") no-repeat scroll 0 0 transparent;
+        left: 3px;
+    }
+}
+
 .cart-page {
     .cart-container {
         .cart-item {
@@ -135,9 +169,9 @@ body {
                 border: none;
                 height: 13px;
                 width: 13px;
-                position:absolute;
-                top:3px;
-                background: url('/blockshop/assets/img/delete.png') no-repeat scroll 0 0 transparent;
+                position: absolute;
+                top: 3px;
+                background: url("/blockshop/assets/img/delete.png") no-repeat scroll 0 0 transparent;
                 right: 3px;
             }
 
