@@ -10,7 +10,6 @@ error_reporting(E_ALL);
 
 //define autoloader
 require_once 'core/autoloader.php';
-
 require_once 'core/exception_handler.php';
 require_once 'config/config.php';
 

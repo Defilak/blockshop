@@ -25,3 +25,7 @@ function load_class($class_name) {
 }
 
 spl_autoload_register('autoloader\load_class');
+/*spl_autoload_register(function ($className) {
+    $className = str_replace("\\", DIRECTORY_SEPARATOR, $className);
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/blockshop/class/' . $className . '.php';
+});*/
