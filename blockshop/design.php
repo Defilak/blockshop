@@ -98,7 +98,7 @@ $headdesign = '
 $ajaxcont = '<div id="cont" style="width:100%;line-height: 18px;">{cont}</div>';
 $ajaxmsg = '<div id="result" style="float:left;width:100%;margin-top:6px;"></div>';
 ///дизайн магазина///
-$shopdesign = '<div id="m{id}" class="presale"><div class="button" title="{info}" style="margin:2px;height:152px;font-size:10px;">{admin}<center><b>{name}</b><br /><img src="/{dir}{icons}{img}"><br />
+/*$shopdesign = '<div id="m{id}" class="presale"><div class="button" title="{info}" style="margin:2px;height:152px;font-size:10px;">{admin}<center><b>{name}</b><br /><img src="/{dir}{icons}{img}"><br />
 	<b>{money} за {amount} шт.</b><br>Кол-во: <input type="number" style="width:50px;" id="p{id}" onkeyup="this.value=this.value.replace(/[^\d\.]+/g,\'\');" value="1"> шт.<br />
     <br><input type="button" class="button" value="Купить" onclick="buy(\'{id}\');" style="width:50%"></center></div></div>';
 ///дизайн ЛК///
@@ -198,7 +198,7 @@ $prefix = '<select id="prefcol" onchange="prefixview();" class="button"><option 
 ///сообщения под статусами///
 $pokupka = '<div style="font-size:10px;"><b><br>1.Покупка осуществляется на один месяц<br>2.Стоимость считывается только с реального счета<br></b></div>';
 $prodlenie = '<div style="font-size:10px;"><b><br>1.Продление осуществляется один 1 месяц<br>2.Продление услуги стоит на 30% дешевле.<br>3.При отказе от услуги на ваш счет вернется 50% суммы (пропорционально оставшимся дням)</b></div>';
-$unban = '<div style="font-size:10px;"><b><br>1.Разбан переводит вас в группу игрок, аннулируя премиум статус (если был)<br>2.После разбана у вас аннулируется количество покупок</b></div>';
+$unban = '<div style="font-size:10px;"><b><br>1.Разбан переводит вас в группу игрок, аннулируя премиум статус (если был)<br>2.После разбана у вас аннулируется количество покупок</b></div>';*/
 ///дизайн истории///
 //$historydesign = file_get_contents('views/history.view.php');
 

@@ -106,16 +106,17 @@ if ($request_params_count == 1 && $group > -1) {
         }
         responses\warning("Забаненные игроки не могут этого делать!");
     } elseif ($group == 15) {
-        if (isset($a['history']) and $s1 = action\ifuser($a['history'])) {
+        /*if (isset($a['history']) and $s1 = action\ifuser($a['history'])) {
             action\history($s1);
-        } elseif (isset($a['cart']) and $s1 = action\ifuser($a['cart'])) {
+        } else*/if (isset($a['cart']) and $s1 = action\ifuser($a['cart'])) {
             $cart = include_once 'cart.php';
             $cart($s1);
             //cart($s1);
         } elseif (isset($a['admin'])) {
             action\admin($a['admin']);
         } elseif (isset($a['edit'])) {
-            action\edit($a['edit']);
+            //action\edit($a['edit']);
+            route_action($action_name, $action_args);
         } elseif (isset($a['del'])) {
             action\delblock($a['del']);
         } elseif (isset($a['edituser'])) {
