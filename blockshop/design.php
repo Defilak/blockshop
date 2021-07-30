@@ -40,29 +40,37 @@ function enchments()
     $template = '';
     for ($i = 0; $i < count($enchs); $i++) {
         [$code, $name] = explode(':', $enchs[$i]);
-        $template = "<option value=\"$code\">$name</option>";
+        $template .= "<option value=\"$code\">$name</option>";
     }
     return $template;
 }
 
-function servlist()
+function servlist($selected = null)
 {
     global $server_names;
-    $l = '';
+    $template = '';
     for ($i = 0, $size = count($server_names); $i < $size; ++$i) {
-        $l .= '<option value="' . $i . '">' . $server_names[$i] . '</option>';
+        if($server_names[$i] === $selected) {
+            $template .= "<option value=\"{$i}\" selected>{$server_names[$i]}</option>";
+        } else {
+            $template .= "<option value=\"{$i}\" >{$server_names[$i]}</option>";
+        }
     }
-    return $l;
+    return $template;
 }
 
-function catlist()
+function catlist($selected = null)
 {
     global $cat;
-    $l = '';
+    $template = '';
     for ($i = 0, $size = count($cat); $i < $size; ++$i) {
-        $l .= '<option value="' . $i . '">' . $cat[$i] . '</option>';
+        if($cat[$i] === $selected) {
+            $template .= "<option value=\"{$i}\" selected>{$cat[$i]}</option>";
+        } else {
+            $template .= "<option value=\"{$i}\" >{$cat[$i]}</option>";
+        }
     }
-    return $l;
+    return $template;
 }
 
 /*Переменные в дизайнах
@@ -204,7 +212,7 @@ $edituserbody = '<tr class="tfoot"><th colspan="5"><div class="hr_line"></div></
 	<td>{bans}</td><td>{buys}</td></tr><tr class=""><td background="/{dir}img/line.gif" height="1" colspan="6"></td></tr>';
 
 
-$admlist = <<<EOL
+/*$admlist = <<<EOL
 <div id="ach">
     <input type="radio" name="image" id="{img}" value="{img}" onChange="doIcon(this.value);">
     <label for="{img}"><img src="/{icons}{img}"></label>
@@ -224,3 +232,4 @@ $admcont = '<center><p>Выберите картинку блока:<br><div cla
 	</div><div class="field">
 	Генератор enchant\'ов:<br /><input type="number" style="width:30%" class="form" id="ench2" value="1"><select id="ench1" onchange="addench();" class="form" style="width:60%">{ench}</select><br>
 	Id всех чар:<br /><input type="text" class="form" style="width:60%" id="ench3" name="0" value="0" ><input type="button" class="form" style="width:30%" value="Наложить" onclick="addench2()"><br /></div></p></center>';
+*/

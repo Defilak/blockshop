@@ -533,14 +533,15 @@ function edituser($s1)
     die(str_replace('{content}', $c, $edituserhead));
 }
 
-function edit($s1)
+/*function edit($s1)
 {
     global $blocks, $server_names, $cat, $db;
 
-    /*if(count(explode("::", $s1)) < 11) {
-        warning("В полях ввода обнаружены запрещенные символы!1");
-    }*/
+    //if(count(explode("::", $s1)) < 11) {
+    //    warning("В полях ввода обнаружены запрещенные символы!1");
+    //}
 
+    print_r(explode("::", $s1));
     list($image, $blockid, $name, $amount, $price, $realprice, $server, $action, $mid, $category, $ench) = explode("::", $s1);
     if (
         !ctype_digit($price) or !ctype_digit($realprice) or !ctype_digit($mid) or !ctype_digit($action) or $action < 0 or $action > 99 or !ctype_digit($amount) or $amount < 1 or !isset($server_names[$server]) or !isset($cat[$category]) or
@@ -557,9 +558,15 @@ function edit($s1)
         inlog('admin.txt', "Добавлен блок под id: {$blockid}");
         responses\success("Вы успешно добавили блок под ID: " . $blockid);
     }
+}*/
+
+function admin($arg)
+{
+    $admin = include_once 'pages/admin.page.php';
+    $admin($arg);
 }
 
-function admin($s1)
+/*function admin($s1)
 {
     global $dir, $blocks, $admlist, $admbox, $admcont, $db, $icons;
     if (!ctype_digit($s1)) {
@@ -603,7 +610,7 @@ function admin($s1)
     $replace = array($f1, $f2, $f3, $f4, $f5, $f6, $f7, $f8, $imglist, $serv, $cats, enchments());
     $c .= str_replace($search, $replace, $admcont);
     die($c);
-}
+}*/
 
 function delblock($s1)
 {
